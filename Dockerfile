@@ -11,6 +11,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
     && pip install --upgrade google-api-python-client \
-    && pip install --force-reinstall --no-binary :all: cffi # https://stackoverflow.com/a/70694565
+    && pip install --force-reinstall --no-binary :all: cffi `# https://stackoverflow.com/a/70694565` \
+    && BUF_VERSION=1.3.1 curl -sSL \
+       "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" | \
+       tar -xvzf - -C "${PREFIX}" --strip-components 1
     
 USER codespace
