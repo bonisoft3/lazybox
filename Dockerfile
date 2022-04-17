@@ -10,10 +10,19 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
     && apt-get update \
     && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
+        less libxext6 libxrender1 libxtst6 libfreetype6 libxi6  `# projector` \
+        clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev  `# flutter` \
     && pip install --upgrade google-api-python-client \
     && pip install --force-reinstall --no-binary :all: cffi `# https://stackoverflow.com/a/70694565` \
     && BUF_VERSION=1.3.1 curl -sSL \
-       "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" | \
-       tar -xvzf - -C "${PREFIX}" --strip-components 1
+       "https://github.com/bufbuild/buf/releases/download/v1.3.1/buf-$(uname -s)-$(uname -m).tar.gz" | \
+       tar -xvzf - -C /usr/local/ --strip-components 1
     
 USER codespace
+
+RUN pip3 install projector-installer --user
+    && projector --accept-license autoinstall --config-name bonitao --ide-name "IntelliJ IDEA Community Edition 2021.3" \
+    && git clone https://github.com/flutter/flutter.git -b stable \
+    && $HOME/flutter/bin/flutter precache \
+    && curl -sSL https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2021.1.1.23/android-studio-2021.1.1.23-linux.tar.gz | \
+       tar -xvzf - -C $HOME
