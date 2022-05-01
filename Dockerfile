@@ -16,13 +16,16 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && pip install --force-reinstall --no-binary :all: cffi `# https://stackoverflow.com/a/70694565` \
     && BUF_VERSION=1.3.1 curl -sSL \
        "https://github.com/bufbuild/buf/releases/download/v1.3.1/buf-$(uname -s)-$(uname -m).tar.gz" | \
-       tar -xvzf - -C /usr/local/ --strip-components 1
+       tar -xvzf - -C /usr/local/ --strip-components 1 \
+    && go install github.com/fullstorydev/grpcurl/cmd/grpcurl@v1.8.6 \
+    && go install github.com/fullstorydev/grpcui/cmd/grpcui@v1.3.0   
     
 USER codespace
 
-RUN pip3 install projector-installer --user
+RUN pip3 install projector-installer --user \
     && projector --accept-license autoinstall --config-name bonitao --ide-name "IntelliJ IDEA Community Edition 2021.3" \
-    && git clone https://github.com/flutter/flutter.git -b stable \
-    && $HOME/flutter/bin/flutter precache \
     && curl -sSL https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2021.1.1.23/android-studio-2021.1.1.23-linux.tar.gz | \
-       tar -xvzf - -C $HOME
+       tar -xvzf - -C $HOME \
+    && git clone https://github.com/flutter/flutter.git $HOME/flutter -b stable \
+    && $HOME/flutter/bin/flutter precache \
+
