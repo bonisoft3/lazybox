@@ -3,14 +3,14 @@
 FROM mcr.microsoft.com/vscode/devcontainers/universal:2-linux
 
 # ** [Optional] Uncomment this section to install additional packages. **
-# USER root
+USER root
 #
-#RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-#    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
-#    && apt-get update \
-#    && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
-#        less libxext6 libxrender1 libxtst6 libfreetype6 libxi6  `# projector` \
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
+    && apt-get update \
+    && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
+         firefox qemu-kvm qt5-default libtcmalloc-minimal4 pulseaudio libc++1 libtcmalloc-minimal4 libqt5webenginewidgets5
 #        clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev  `# flutter` \
 #    && pip install --upgrade google-api-python-client \
 #    && pip install --force-reinstall --no-binary :all: cffi `# https://stackoverflow.com/a/70694565` \
