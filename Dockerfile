@@ -10,7 +10,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
     && apt-get update \
     && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
-         firefox qemu-kvm qt5-default libtcmalloc-minimal4 pulseaudio libc++1 libtcmalloc-minimal4 libqt5webenginewidgets5
+         firefox qemu-kvm qt5-default libtcmalloc-minimal4 pulseaudio libc++1 libtcmalloc-minimal4 libqt5webenginewidgets5 \
+         ripgrep  fd-find fzf
+# RUN chown codespace /dev/kvm
 #        clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev  `# flutter` \
 #    && pip install --upgrade google-api-python-client \
 #    && pip install --force-reinstall --no-binary :all: cffi `# https://stackoverflow.com/a/70694565` \
