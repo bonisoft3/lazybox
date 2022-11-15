@@ -6,7 +6,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
-         neovim ripgrep fd-find fzf
-RUN PREFIX="/usr/local" VERSION="1.9.0" curl -sSL \ 
-    "https://github.com/bufbuild/buf/releases/download/v${VERSION}/buf-$(uname -s)-$(uname -m).tar.gz" | \
-    tar -xvzf - -C "${PREFIX}" --strip-components 1
+         neovim ripgrep fd-find fzf bat
+RUN curl -sSL \ 
+    "https://github.com/bufbuild/buf/releases/download/v1.9.0/buf-Linux-x86_64.tar.gz" | \
+    tar -xzf - -C /usr/local --strip-components 1
