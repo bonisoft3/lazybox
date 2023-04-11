@@ -6,7 +6,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
+         postgresql-client \
          neovim ripgrep fd-find fzf bat
+
 RUN curl -sSL \ 
     "https://github.com/bufbuild/buf/releases/download/v1.9.0/buf-Linux-x86_64.tar.gz" | \
     tar -xzf - -C /usr/local --strip-components 1
