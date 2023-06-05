@@ -16,5 +16,6 @@ RUN curl -sSL \
 RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.19.0/kind-linux-amd64 && \
     chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
 
-RUN curl -LO "https://dl.k8s.io/release/v1.27.2/bin/linux/amd64/kubectl" && \
-    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+
+RUN sudo apt-get update && sudo apt-get install -y kubectl
