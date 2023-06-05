@@ -12,3 +12,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 RUN curl -sSL \ 
     "https://github.com/bufbuild/buf/releases/download/v1.9.0/buf-Linux-x86_64.tar.gz" | \
     tar -xzf - -C /usr/local --strip-components 1
+
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.19.0/kind-linux-amd64 && \
+    chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+
+RUN curl -LO "https://dl.k8s.io/release/v1.27.2/bin/linux/amd64/kubectl" && \
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
