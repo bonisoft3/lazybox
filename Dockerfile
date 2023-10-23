@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04@sha256:a724e14d4175f641fd52ee317680e7b228d5c553c3ac1a558b069a3373688016
 
 RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
 
@@ -16,7 +16,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
          python3 python3-pip openjdk-17-jdk nodejs rustc rust-clippy cargo build-essential \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
          postgresql-client \
-         yadm neovim ripgrep fd-find fzf bat zoxide fzf jq yq mkcert
+         yadm neovim ripgrep fd-find fzf bat zoxide jq yq mkcert
 
 RUN corepack enable  # installs pnpm
 # https://github.com/pnpm/pnpm/issues/4495#issuecomment-1518584959
@@ -29,5 +29,5 @@ RUN curl -sSL \
 RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.19.0/kind-linux-amd64 && \
     chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
 
-RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v2.5.1/skaffold-linux-amd64 && \
+RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v2.8.0/skaffold-linux-amd64 && \
     sudo install skaffold /usr/local/bin/
