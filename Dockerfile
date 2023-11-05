@@ -1,22 +1,25 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04@sha256:a724e14d4175f641fd52ee317680e7b228d5c553c3ac1a558b069a3373688016
-
-RUN curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04@sha256:589ff4a08ed51c23f4a021f02769308054e9095a855644bdffa26d59b0380038
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg software-properties-common \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - \
-    && echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
-    && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add - \
-    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - \
-    && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable" \
-    && sudo add-apt-repository -y ppa:rmescandon/yq \
+    && curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
+    && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker.gpg \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/nodesource.gpg \
+    && echo "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
+    && echo  "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \"$(. /etc/os-release && echo $VERSION_CODENAME)\" stable" | sudo tee -a /etc/apt/sources.list.d/docker.list \
+    &&  echo "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/usr/share/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \"$(. /etc/os-release && echo $VERSION_CODENAME)\" stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    && echo  "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee -a /etc/apt/sources.list.d/docker.list \
+    && add-apt-repository -y ppa:rmescandon/yq \
     && apt-get update \
-    && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
+    &&  apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
          kubectl google-cloud-cli \
          python3 python3-pip openjdk-17-jdk nodejs rustc rust-clippy cargo build-essential \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
          postgresql-client \
+         docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
          yadm neovim ripgrep fd-find fzf bat zoxide jq yq mkcert
+
 
 RUN corepack enable  # installs pnpm
 # https://github.com/pnpm/pnpm/issues/4495#issuecomment-1518584959
