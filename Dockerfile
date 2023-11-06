@@ -12,7 +12,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && echo  "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee -a /etc/apt/sources.list.d/docker.list \
     && add-apt-repository -y ppa:rmescandon/yq \
     && apt-get update \
-    &&  apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
+    && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
          kubectl google-cloud-cli \
          python3 python3-pip openjdk-17-jdk nodejs rustc rust-clippy cargo build-essential \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
@@ -26,11 +26,11 @@ RUN corepack enable  # installs pnpm
 ENV PNPM_HOME=/usr/local/bin
 
 RUN curl -sSL \
-    "https://github.com/bufbuild/buf/releases/download/v1.22.0/buf-Linux-x86_64.tar.gz" | \
+    "https://github.com/bufbuild/buf/releases/download/v1.22.0/buf-Linux-$(uname -m).tar.gz" | \
     tar -xzf - -C /usr/local --strip-components 1
 
-RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.19.0/kind-linux-amd64 && \
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-$(dpkg --print-architecture) && \
     chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
 
-RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v2.8.0/skaffold-linux-amd64 && \
+RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v2.8.0/skaffold-linux-$(dpkg --print-architecture) && \
     sudo install skaffold /usr/local/bin/
