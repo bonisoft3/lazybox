@@ -11,8 +11,9 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
     && echo  "deb [arch=\"$(dpkg --print-architecture)\" signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | sudo tee -a /etc/apt/sources.list.d/docker.list \
     && add-apt-repository -y ppa:rmescandon/yq \
-    && apt-get update \
-    && apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
+    && apt-get update
+
+RUN apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
          kubectl google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin \
          python3 python3-pip openjdk-17-jdk nodejs rustc rust-clippy cargo build-essential \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
