@@ -20,6 +20,8 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
          docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
          yadm neovim ripgrep fd-find fzf bat zoxide jq yq mkcert
 
+# https://cloud.google.com/artifact-registry/docs/docker/authentication#before_you_begin
+RUN sudo usermod -a -G docker vscode
 
 RUN corepack enable  # installs pnpm
 # https://github.com/pnpm/pnpm/issues/4495#issuecomment-1518584959
