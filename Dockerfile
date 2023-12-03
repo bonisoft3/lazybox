@@ -15,7 +15,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 RUN apt-get -y install --no-install-recommends apt-transport-https ca-certificates gnupg google-cloud-cli \
          kubectl google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin \
-         python3 python3-pip openjdk-17-jdk nodejs rustc rust-clippy cargo build-essential \
+         python3 python3-pip openjdk-21-jdk nodejs rustc rust-clippy cargo build-essential \
          firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
          postgresql-client \
          docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
