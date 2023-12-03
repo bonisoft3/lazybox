@@ -35,5 +35,5 @@ RUN curl -sSL \
 RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-$(dpkg --print-architecture) && \
     chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
 
-RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v2.8.0/skaffold-linux-$(dpkg --print-architecture) && \
+RUN curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/v2.9.0/skaffold-linux-$(dpkg --print-architecture) && \
     sudo install skaffold /usr/local/bin/
