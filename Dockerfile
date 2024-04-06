@@ -36,6 +36,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # https://cloud.google.com/artifact-registry/docs/docker/authentication#before_you_begin
 RUN sudo usermod -a -G docker vscode
 
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# broken directory in ubuntu, removing silences some warnings
+RUN rm -rf /usr/lib/jvm/openjdk-21
+
 RUN corepack enable  # installs pnpm
 # https://github.com/pnpm/pnpm/issues/4495#issuecomment-1518584959
 ENV PNPM_HOME=/usr/local/bin
