@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04@sha256:589ff4a08ed51c23f4a021f02769308054e9095a855644bdffa26d59b0380038 as devserver
+ARG TARGETARCH
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
@@ -36,7 +37,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # https://cloud.google.com/artifact-registry/docs/docker/authentication#before_you_begin
 RUN sudo usermod -a -G docker vscode
 
-ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+RUN ln -sf $JAVA_HOME-$TARGETARCH $JAVA_HOME
 # broken directory in ubuntu, removing silences some warnings
 RUN rm -rf /usr/lib/jvm/openjdk-21
 
