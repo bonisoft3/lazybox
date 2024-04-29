@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-transport-https ca-certificates gnupg google-cloud-cli \
     kubectl google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
-    openjdk-21-jdk python3 python3-pip openjdk-21-jdk nodejs rustc rust-clippy cargo build-essential \
+    openjdk-21-jdk python3 python3-pip nodejs rustc rust-clippy cargo build-essential \
     firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
     postgresql-client \
     yadm neovim ripgrep fd-find fzf bat jq yq mkcert
