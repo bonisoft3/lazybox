@@ -1,30 +1,17 @@
-# syntax = devthefuture/dockerfile-x:v1.3.3@sha256:807e3b9a38aa29681f77e3ab54abaadb60e633dc5a5672940bb957613b4f9c82
-FROM ./base#devserver as devcontainer
-ENV DEBIAN_FRONTEND=noninteractive
+FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:474.0.0-alpine as gcloud
+FROM mcr.microsoft.com/devcontainers/base:alpine-3.14
+ARG TARGETARCH
+RUN sed -i -e 's/14/19/' /etc/apk/repositories
+RUN apk del --no-cache shadow && apk -U upgrade --no-cache && apk add --upgrade -U --no-cache util-linux-login apk-tools
+RUN apk add -U --no-cache docker-cli docker-compose docker-cli-buildx kubectl
+RUN apk add --no-cache buf mkcert kind --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+RUN apk add -U --no-cache yadm neovim ripgrep fd fzf bat zoxide jq yq
+RUN wget -O /etc/apk/keys/adoptium.rsa.pub https://packages.adoptium.net/artifactory/api/security/keypair/public/repositories/apk && echo 'https://packages.adoptium.net/artifactory/apk/alpine/main' >> /etc/apk/repositories
+RUN apk add -U --no-cache postgresql firefox python3 nodejs temurin-21-jdk cargo go
+RUN apk add -U --no-cache pnpm --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+RUN apk add -U --no-cache curl python3 py3-crcmod bash libc6-compat openssh-client git # gcloud dependencies
 
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get -y install --no-install-recommends \
-    yadm neovim ripgrep fd-find fzf bat jq yq mkcert \
-    docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
-    apt-transport-https ca-certificates gnupg google-cloud-cli \
-    kubectl google-cloud-cli google-cloud-sdk-gke-gcloud-auth-plugin \
-    docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin \
-    openjdk-21-jdk python3 python3-pip nodejs rustc rust-clippy cargo build-essential \
-    firefox qemu-kvm pulseaudio libqt5webenginewidgets5 \
-    postgresql-client \
-    yadm neovim ripgrep fd-find fzf bat jq yq mkcert
+COPY --from=gcloud /google-cloud-sdk /google-cloud-sdk
+ENV PATH $PATH:/google-cloud-sdk/bin
 
-# https://cloud.google.com/artifact-registry/docs/docker/authentication#before_you_begin
-RUN sudo usermod -a -G docker vscode
-
-RUN corepack enable  # installs pnpm
-# https://github.com/pnpm/pnpm/issues/4495#issuecomment-1518584959
-ENV PNPM_HOME=/usr/local/bin
-
-RUN curl -sSL \
-    "https://github.com/bufbuild/buf/releases/download/v1.22.0/buf-Linux-$(uname -m).tar.gz" | \
-    tar -xzf - -C /usr/local --strip-components 1
-
-RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-$(dpkg --print-architecture) && \
-    chmod +x ./kind && sudo mv ./kind /usr/local/bin/kind
+CMD [ "/bin/bash" ]
