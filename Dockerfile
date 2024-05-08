@@ -1,4 +1,7 @@
 FROM gcr.io/google.com/cloudsdktool/google-cloud-cli:474.0.0-alpine as gcloud
+# Alpine is part of the officially supported devcontainer base images. The
+# debian and ubuntu ones are just too painful to use due to the slowness
+# of apt. If alpine gives too much pain, consider going with SUSE Leap.
 FROM mcr.microsoft.com/devcontainers/base:alpine-3.14
 ARG TARGETARCH
 RUN sed -i -e 's/14/19/' /etc/apk/repositories
