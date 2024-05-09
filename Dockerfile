@@ -8,7 +8,7 @@ ARG TARGETARCH
 # We cannot upgrade to alpine 19 yet: https://github.com/nodejs/docker-node/issues/2009
 RUN sed -i -e 's/14/18/' /etc/apk/repositories
 RUN apk del --no-cache shadow && apk -U upgrade --no-cache && apk add --upgrade -U --no-cache util-linux-login apk-tools
-RUN apk add -U --no-cache docker-cli docker-compose docker-cli-buildx
+#RUN apk add -U --no-cache docker-cli docker-compose docker-cli-buildx
 RUN apk add -U --no-cache kubectl --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community/
 RUN apk add -U --no-cache buf mkcert kind --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
 RUN apk add -U --no-cache yadm neovim ripgrep fd fzf bat zoxide jq yq
