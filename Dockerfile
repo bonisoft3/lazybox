@@ -15,6 +15,7 @@ RUN apk add -U --no-cache yadm neovim ripgrep fd fzf bat zoxide jq yq
 RUN apk add -U --no-cache postgresql firefox python3 nodejs cargo go
 RUN apk add -U --no-cache openjdk21-jdk --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community/
 RUN apk add -U --no-cache pnpm --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+RUN apk add -U --no-cache linux-headers  # same as https://github.com/grpc/grpc/issues/26882, but with re2
 RUN apk add -U --no-cache curl python3 py3-crcmod bash libc6-compat openssh-client git # gcloud dependencies
 
 COPY --from=gcloud /google-cloud-sdk /google-cloud-sdk
