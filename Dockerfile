@@ -34,10 +34,10 @@ RUN sudo usermod -a -G docker vscode
 RUN rm -rf /usr/lib/jvm/openjdk-21
 
 RUN curl -Ssf https://pkgx.sh | sh
-RUN pkgx integrate
-RUN pkgx install nushell.sh
-RUN pkgx install yadm neovim.io rg fd fzf bat zoxide jq yq
-RUN pkgx install skaffold kind kubernetes.io/kubectl
+RUN pkgx pkgx@1.5.0 integrate
+RUN pkgx pkgx@1.5.0 install nushell.sh
+RUN pkgx pkgx@1.5.0 install yadm neovim.io rg fd fzf bat zoxide jq yq
+RUN pkgx pkgx@1.5.0 install skaffold kind kubernetes.io/kubectl
 ENV PATH $PATH:/root/.local/bin
 
 SHELL [ "/bin/bash", "-c" ]
