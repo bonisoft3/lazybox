@@ -1,0 +1,33 @@
+[settings]
+lockfile = true
+experimental = true
+paranoid = false
+
+[env]
+MISE_github_GITHUB_ATTESTATIONS = "false"
+MISE_github_COSIGN = "false"
+MISE_github_SLSA = "false"
+MISE_github_MINISIGN = "false"
+
+[tools]
+"aqua:docker/buildx" = "0.27.0"
+"aqua:docker/compose" = "2.39.2"
+"github:nushell/nushell" = "0.107.0"
+"aqua:go-task/task" = "3.44.1"
+"aqua:casey/just" = "1.42.4"
+"aqua:getsops/sops" = "3.11.0"
+"aqua:bufbuild/buf" = "1.57.2"
+"aqua:GoogleContainerTools/skaffold" = "2.16.1"
+"aqua:kubernetes-sigs/kind" = "0.30"
+"aqua:zyedidia/micro" = "2.0.14"
+"aqua:sharkdp/bat" = "0.25.0"
+"aqua:sharkdp/fd" = "10.3.0"
+"aqua:junegunn/fzf" = "0.65.2"
+"aqua:ducaale/xh" = "0.25.0"
+"aqua:ajeetdsouza/zoxide" = "0.9.8"
+"github:BurntSushi/ripgrep" = "14.1.1"
+"github:jqlang/jq" = "jq-1.8.1"
+"aqua:kubernetes/kubectl" = "1.34.1"
+"aqua:Byron/dua-cli" = "2.32.0"
+"github:sharkdp/hyperfine" = "1.19.0"
+"github:lsd-rs/lsd" = "v1.1.5"
