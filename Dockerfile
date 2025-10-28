@@ -1,57 +1,40 @@
-ARG BASE_IMAGE=mcr.microsoft.com/devcontainers/base:debian
-FROM $BASE_IMAGE
+ARG BASE_IMG=alpine/curl
+
+FROM --platform=windows ${BASE_IMG} AS lazybox-windows
+RUN scoop install mise nu
+COPY mise.toml mise.lock ./
+RUN mise install
+
+FROM --platform=linux ${BASE_IMG} AS lazybox-linux
 ENV MISE_VERSION=2025.10.2
-ENV SOAR_VERSION=0.8.1
-
-# Copy static curl and certificates to bootstrap soar, then install full-featured curl
-COPY --from=tarampampam/curl@sha256:617b3306349beaacb7ad82bddda8d6876a40c3bad06d7a28981504d230802d7e /bin/curl /etc/ssl/certs/ca-certificates.crt /tmp/
-RUN chmod +x /tmp/curl && \
-    mkdir -p $HOME/.local/share/ca-certificates && \
-    mv /tmp/ca-certificates.crt $HOME/.local/share/ca-certificates/ && \
-    mkdir -p $HOME/.local/share/soar/bin && \
-		mv /tmp/curl $HOME/.local/share/soar/bin && \
-    export PATH="$PATH:$HOME/.local/share/soar/bin" && \
-    export SSL_CERT_FILE="$HOME/.local/share/ca-certificates/ca-certificates.crt"  && \
-    curl -fsSL "https://raw.githubusercontent.com/pkgforge/soar/v${SOAR_VERSION}/install.sh" | sh && \
-    $HOME/.local/bin/soar install -y curl && \
-    curl -fsSL https://mise.jdx.dev/install.sh | MISE_VERSION=v${MISE_VERSION} sh && \
-    rm -rf $HOME/.local/share/soar/repos
-
-RUN mkdir -p $HOME/.config/mise/
-COPY mise.toml mise.lock mise.alpine.lock .
-RUN mv mise.toml $HOME/.config/mise/config.toml && mv mise.lock $HOME/.config/mise/config.lock
-RUN test -f /etc/alpine-release && mv mise.alpine.lock $HOME/.config/mise/config.lock || rm mise.alpine.lock
-COPY lazy-shims.nu .
-
+RUN mkdir -p $HOME/.local/bin && touch $HOME/.profile
+RUN . $HOME/.profile && echo export PATH=$PATH:$HOME/.local/bin >> $HOME/.profile
+RUN . $HOME/.profile && mkdir -p $HOME/.config/mise/
+COPY mise.toml mise.lock mise.alpine.lock ./
+RUN . $HOME/.profile && \
+	mv mise.toml $HOME/.config/mise/config.toml && \
+	mv mise.lock $HOME/.config/mise/config.lock && \
+	test -f /etc/alpine-release && mv mise.alpine.lock $HOME/.config/mise/config.lock || rm mise.alpine.lock
+COPY --chmod=755 lazy-shims.nu lazy-docker.sh lazy-mise.sh ./
 # Trust the mise configuration files and install tools
-RUN export PATH="$PATH:$HOME/.local/bin:$HOME/.local/share/soar/bin" && \
-    export SSL_CERT_FILE="$HOME/.local/share/ca-certificates/ca-certificates.crt" && \
-		export MISE_AQUA_GITHUB_ATTESTATIONS=false && \
-		export MISE_PARANOID=false && \
-		export MISE_AQUA_COSIGN=false && \
-		export MISE_AQUA_SLSA=false && \
-		export MISE_AQUA_MINISIGN=false && \
+RUN . $HOME/.profile && mv lazy-mise.sh $HOME/.local/bin/lazy-mise && $HOME/.local/bin/lazy-mise --help && \
     mise trust $HOME/.config/mise/config.toml && \
 		cd $HOME/.config/mise && \
     mise install && \
-		ln $(mise where aqua:docker/buildx)/docker-cli-plugin-docker-buildx $(mise where aqua:docker/buildx)/docker-buildx && \
-    ln $(mise where aqua:docker/compose)/docker-cli-plugin-docker-compose $(mise where aqua:docker/compose)/docker-compose && \
     $HOME/.local/share/mise/shims/nu $OLDPWD/lazy-shims.nu $HOME/.config/mise/config.toml && \
-    rm $OLDPWD/lazy-shims.nu && rm -rf $HOME/.local/share/mise/installs/
+		mv $OLDPWD/lazy-docker.sh $HOME/.local/bin/docker && \
+    rm $OLDPWD/lazy-shims.nu && rm -rf $HOME/.local/share/mise/installs/ && \
+		rm $HOME/.local/bin/mise
 
-# ok to hardcode home, will only fail on non-root alpine
-ENV ENV=/root/.ashrc
-RUN echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.miserc && \
-    echo 'export SSL_CERT_FILE="$HOME/.local/share/ca-certificates/ca-certificates.crt"' >> ~/.miserc && \
-    echo 'source $HOME/.miserc' >> ~/.bashrc && \
-    echo 'eval "$($HOME/.local/bin/mise activate bash)"' >> ~/.bashrc && \
-    echo 'source $HOME/.miserc' >> ~/.zshrc && \
-    echo 'eval "$($HOME/.local/bin/mise activate zsh)"' >> ~/.zshrc && \
-    echo 'source $HOME/.miserc' >> ~/.ashrc && \
-    mkdir -p ~/.config/fish && \
-    echo 'source ~/.miserc' >> ~/.config/fish/config.fish && \
-    echo 'mise activate fish | source' >> ~/.config/fish/config.fish && \
-    mkdir -p ~/.config/nushell && \
-    echo 'source-env ~/.miserc' >> ~/.config/nushell/env.nu && \
-    echo 'mise activate nu | save -f ~/.mise-activate.nu' >> ~/.config/nushell/config.nu && \
-    echo 'source ~/.mise-activate.nu' >> ~/.config/nushell/config.nu
+FROM lazybox-$TARGETOS AS lazybox
+
+FROM lazybox AS nubox
+WORKDIR /root
+RUN . $HOME/.profile && nu --help
+SHELL [ "/root/.local/share/mise/shims/nu", "-l", "-c" ]
+RUN [ '$env.PATH = ($env.PATH | append /root/.local/bin)', '$env.SSL_CERT_FILE = ($env.HOME | path join ".local/share/ca-certificates/ca-certificates.crt")' ] |  | save -f ($nu.default-config-dir | path join 'env.nu')
+RUN mkdir ($nu.user-autoload-dirs | path join nubox)
+RUN '$env.PATH = ($env.PATH | append /root/.local/bin)' | save -f ($nu.user-autoload-dirs | path join nubox/path.nu)
+RUN '$env.SSL_CERT_FILE = ($env.HOME | path join ".local/share/ca-certificates/ca-certificates.crt")' | save -f ($nu.user-autoload-dirs | path join nubox/ssl.nu)
+RUN mise activate nu | save -f ($nu.user-autoload-dirs | path join nubox/mise.nu) 
+CMD [ "/root/.local/share/mise/shims/nu", "-l" ]

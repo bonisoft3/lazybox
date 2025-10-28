@@ -1,0 +1,47 @@
+services:
+  nubox:
+    build:
+      target: nubox
+
+  lazybox-alpine:
+    build:
+      target: lazybox
+
+  lazybox-wolfi:
+    build:
+      target: lazybox
+      args:
+        BASE_IMG: bonisoft3/bbcurl
+      additional_contexts:
+        bonisoft3/bbcurl: service:bbcurl
+
+  lazybox-scratch:
+    build:
+      target: lazybox
+      args:
+        BASE_IMG: bonisoft3/bbcurl
+      additional_contexts:
+        bonisoft3/bbcurl: service:bbcurl-scratch
+
+  bbcurl:
+    build:
+      dockerfile: bbcurl.Dockerfile
+      target: bbcurl
+
+  bbcurl-scratch:
+    build:
+      dockerfile: bbcurl.Dockerfile
+      target: bbcurl
+      args:
+        BASE_IMG: ""
+
+  bbcurl-windows:
+    build:
+      dockerfile: bbcurl.Dockerfile
+      target: bbcurl-windows
+
+  bbcurl-linux:
+    platform: linux
+    build:
+      dockerfile: bbcurl.Dockerfile
+      target: bbcurl-linux

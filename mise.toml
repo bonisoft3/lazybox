@@ -2,14 +2,13 @@
 lockfile = true
 experimental = true
 paranoid = false
-
-[env]
-MISE_github_GITHUB_ATTESTATIONS = "false"
-MISE_github_COSIGN = "false"
-MISE_github_SLSA = "false"
-MISE_github_MINISIGN = "false"
+aqua.github_attestations = false
+aqua.cosign = false
+aqua.slsa = false
+aqua.minisign = false
 
 [tools]
+"aqua:docker/cli" = "28.5.1"
 "aqua:docker/buildx" = "0.27.0"
 "aqua:docker/compose" = "2.39.2"
 "github:nushell/nushell" = "0.107.0"
