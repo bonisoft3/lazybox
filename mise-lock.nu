@@ -482,4 +482,3 @@ def generate_alpine_variant [lockfile_content: string] {
     
     $alpine_content
 }
-

@@ -24,14 +24,7 @@ def read_mise_config [mise_toml_path: string] {
 }
 
 # Build a mapping of binary names to their package names with versions by scanning installation directories
-def build_tool_mapping [mise_toml_path: string] {
-    let installs_dir = $"($env.HOME)/.local/share/mise/installs"
-    
-    if not ($installs_dir | path exists) {
-        print $"❌ Installs directory not found at ($installs_dir)"
-        exit 1
-    }
-    
+def build_tool_mapping [mise_toml_path: string, installs_dir: string] {
     # Read the configured tools and versions from mise.toml
     let mise_tools = (read_mise_config $mise_toml_path)
     if ($mise_tools | is-empty) {
@@ -126,7 +119,7 @@ def build_tool_mapping [mise_toml_path: string] {
     $tool_mapping
 }
 
-def main [mise_toml_path?: string] {
+def main [mise_toml_path?: string, --delete-installs] {
     # Default to mise.toml in current directory if no path provided
     let toml_path = if ($mise_toml_path | is-empty) { "mise.toml" } else { $mise_toml_path }
     
@@ -136,12 +129,27 @@ def main [mise_toml_path?: string] {
         print "Usage: ./lazy-shims.nu [path/to/mise.toml]"
         exit 1
     }
-    let shims_dir = $"($env.HOME)/.local/share/mise/shims"
+
     let local_bin_dir = $"($env.HOME)/.local/bin"
-    let installs_dir = $"($env.HOME)/.local/share/mise/installs"
-    
+
+    # Determine the base data directory for mise
+    let base_dir = if "MISE_DATA_DIR" in $env and ($env.MISE_DATA_DIR | is-not-empty) {
+        $env.MISE_DATA_DIR
+    } else if "XDG_DATA_HOME" in $env and ($env.XDG_DATA_HOME | is-not-empty) {
+        $"($env.XDG_DATA_HOME)/mise"
+    } else {
+        $"($env.HOME)/.local/share/mise"
+    }
+
+    let shims_dir = $"($base_dir)/shims"
     if not ($shims_dir | path exists) {
         print "❌ Shims directory not found at $shims_dir"
+        exit 1
+    }
+
+    let installs_dir = $"($base_dir)/installs"
+    if not ($installs_dir | path exists) {
+        print $"❌ Installs directory not found at ($installs_dir)"
         exit 1
     }
     
@@ -153,7 +161,7 @@ def main [mise_toml_path?: string] {
     print "🔍 Analyzing mise shims and creating lazy loaders in .local/bin..."
     
     # Build dynamic tool mapping by scanning installs directory
-    let tool_map = (build_tool_mapping $toml_path)
+    let tool_map = (build_tool_mapping $toml_path $installs_dir)
     
     # If tool mapping is empty due to sync errors, bail out completely
     if ($tool_map | is-empty) {
@@ -202,9 +210,32 @@ lazy-mise x ($package_spec) -- ($shim_name) \"$@\"
         }
     }
     
+    # Delete Installs
+    # If the --delete-installs flag is passed, this section will delete the tool installations
+    # from the mise installs directory. This is useful for cleaning up and reducing container size.
+    mut delete_count = 0
+    if $delete_installs {
+        print "🧹 Removing installs..."
+        for item in (ls $installs_dir) {
+            let item_path = $item.name
+            # We skip docker-compose and docker-buildx because they are docker plugins and should not be removed.
+            if ($item_path | str contains "aqua-docker-compose") or ($item_path | str contains "aqua-docker-buildx") {
+                print $"   Skipping Docker plugin: ($item_path | path basename)"
+                continue
+            }
+
+            rm -rf $item_path
+            print $"   Deleted ($item_path | path basename)"
+            $delete_count = ($delete_count + 1)
+        }
+    }
+
     # Summary
     print $"\\n📊 Lazy shim conversion complete!"
     print $"   Converted: ($converted) shims to .local/bin"
+    if $delete_installs {
+        print $"   Delete: ($delete_count) installs"
+    }
     print $"   Tools will be installed on first use via 'mise x'"
     print $"   Lazy shims in .local/bin will override mise shims"
     

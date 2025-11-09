@@ -24,9 +24,17 @@ aqua.minisign = false
 "aqua:junegunn/fzf" = "0.65.2"
 "aqua:ducaale/xh" = "0.25.0"
 "aqua:ajeetdsouza/zoxide" = "0.9.8"
+"aqua:jqlang/jq" = "jq-1.8.1"
 "github:BurntSushi/ripgrep" = "14.1.1"
-"github:jqlang/jq" = "jq-1.8.1"
 "aqua:kubernetes/kubectl" = "1.34.1"
 "aqua:Byron/dua-cli" = "2.32.0"
 "github:sharkdp/hyperfine" = "1.19.0"
 "github:lsd-rs/lsd" = "v1.1.5"
+"aqua:astral-sh/uv" = "0.6.14"
+"aqua:mikefarah/yq" = "v4.44.2"
+"github:ko1nksm/shdotenv" = "v0.14.0"
+
+[hooks]
+postinstall = [
+	"uv tool install vscode-task-runner"
+]
