@@ -33,8 +33,3 @@ aqua.minisign = false
 "aqua:astral-sh/uv" = "0.6.14"
 "aqua:mikefarah/yq" = "v4.44.2"
 "github:ko1nksm/shdotenv" = "v0.14.0"
-
-[hooks]
-postinstall = [
-	"uv tool install vscode-task-runner"
-]
