@@ -1,14 +1,18 @@
-#!/bin/sh
-export MISE_VERSION=2025.10.2
-test -e $HOME/.profile && . $HOME/.profile
-ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
-OS=$(uname -s | tr "[:upper:]" "[:lower:]" | sed 's/darwin/macos/')
-LIBC=
-if [ "linux" = "$OS" ]; then
-	LIBC="-musl" # statically linked everywhere
+#!/usr/bin/env sh
+SCRIPT_PATH=$(dirname $(realpath "$0"))
+LAZYBOX_HOME="$SCRIPT_PATH/../../.."
+MISE_VERSION=2025.10.2
+if [ ! -x "$LAZYBOX_HOME/bin/mise" ]; then
+	ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
+	OS=$(uname -s | tr "[:upper:]" "[:lower:]" | sed 's/darwin/macos/')
+	LIBC=
+	if [ "linux" = "$OS" ]; then
+		LIBC="-musl" # statically linked everywhere
+	fi
+	mkdir -p $LAZYBOX_HOME/bin/
+  curl -fsSL https://github.com/jdx/mise/releases/download/v${MISE_VERSION}/mise-v${MISE_VERSION}-$OS-$ARCH$LIBC -o $LAZYBOX_HOME/bin/mise
+	chmod 755 $LAZYBOX_HOME/bin/mise
 fi
-if [ ! -x $HOME/.local/bin/mise ]; then
-  curl -fsSL https://github.com/jdx/mise/releases/download/v${MISE_VERSION}/mise-v${MISE_VERSION}-$OS-$ARCH$LIBC -o $HOME/.local/bin/mise
-	chmod 755 $HOME/.local/bin/mise
-fi
-$HOME/.local/bin/mise "$@"
+export SSL_CERT_FILE=$LAZYBOX_HOME/share/ca-certificates/ca-certificates.crt 
+export PATH=$LAZYBOX_HOME/bin:$PATH  # real mise first on PATH
+exec "$LAZYBOX_HOME/bin/mise" "$@"

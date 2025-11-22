@@ -194,8 +194,14 @@ def main [mise_toml_path?: string, --delete-installs] {
             let package_spec = if ($shim_name in $tool_map) { $tool_map | get $shim_name } else { $shim_name }
             
             # Create lazy loading shell script in .local/bin
-            let script_content = $"#!/bin/sh
-lazy-mise x ($package_spec) -- ($shim_name) \"$@\"
+            let script_content = $"#!/usr/bin/env sh
+SCRIPT_PATH=$\(dirname $\(realpath \"$0\"\)\)
+cd $SCRIPT_PATH
+MISE=$SCRIPT_PATH/../share/lazybox/bin/mise
+$MISE trust -q $PWD
+$MISE x ($package_spec) -- true
+cd -
+$MISE x ($package_spec) -- ($shim_name) \"$@\"
 "
             
             # Create the lazy shim in .local/bin (which has higher precedence in PATH)
