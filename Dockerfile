@@ -50,7 +50,6 @@ ENV LAZYBOX_HOME=/lazybox
 ENV PATH=$PATH:${LAZYBOX_HOME}/.local/share/lazybox/shims/:${LAZYBOX_HOME}/.local/share/lazybox/stubs/:${LAZYBOX_HOME}/.local/share/lazybox/bin:/usr/bin:/bin
 COPY --from=lazybox-builder /lazybox ${LAZYBOX_HOME}
 RUN mkdir -p /usr/bin/ && test -x /usr/bin/env || ln $HOME/.local/share/lazybox/bin/busybox /usr/bin/env  # need a absolute path shell interpreter
-RUN test -f /etc/alpine-release && mv ${LAZYBOX_HOME}/.local/bin/.config/mise/config.alpine.lock ${LAZYBOX_HOME}/.local/bin/.config/mise/config.lock || true
 
 FROM lazybox AS nubox
 WORKDIR /root
@@ -61,5 +60,5 @@ RUN '$env.PATH = ($env.PATH | append /root/.local/bin)' | save -f ($nu.user-auto
 RUN '$env.SSL_CERT_FILE = ($env.LAZYBOX_HOME | path join ".local/share/ca-certificates/ca-certificates.crt")' | save -f ($nu.user-autoload-dirs | path join nubox/ssl.nu)
 RUN mise activate nu | save -f ($nu.user-autoload-dirs | path join nubox/mise.nu)
 # devcontainer wants to extend this image and needs a posix shell
-SHELL [ "/bin/sh" ]
+SHELL [ "/bin/sh", "-c" ]
 CMD [ "/lazybox/.local/share/lazybox/stubs/nu", "-l" ]
