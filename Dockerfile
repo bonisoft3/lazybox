@@ -60,4 +60,6 @@ RUN mkdir ($nu.user-autoload-dirs | path join nubox)
 RUN '$env.PATH = ($env.PATH | append /root/.local/bin)' | save -f ($nu.user-autoload-dirs | path join nubox/path.nu)
 RUN '$env.SSL_CERT_FILE = ($env.LAZYBOX_HOME | path join ".local/share/ca-certificates/ca-certificates.crt")' | save -f ($nu.user-autoload-dirs | path join nubox/ssl.nu)
 RUN mise activate nu | save -f ($nu.user-autoload-dirs | path join nubox/mise.nu)
+# devcontainer wants to extend this image and needs a posix shell
+SHELL [ "/bin/sh" ]
 CMD [ "/lazybox/.local/share/lazybox/stubs/nu", "-l" ]
