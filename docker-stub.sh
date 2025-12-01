@@ -7,7 +7,7 @@ if [ ! -x $HOME/.docker/cli-plugins/docker-compose ]; then
  ln -sf $DIR/docker-cli-plugin-docker-compose $HOME/.docker/cli-plugins/docker-compose
 fi
 if [ ! -x $HOME/.docker/cli-plugins/docker-buildx ]; then
- ln -sf $DIR/docker-cli-plugin-docker-compose $HOME/.docker/cli-plugins/docker-buildx
+ ln -sf $DIR/docker-cli-plugin-docker-buildx $HOME/.docker/cli-plugins/docker-buildx
 fi
 # Check for Alpine and prefer musl variant if available
 # Check for Alpine and prefer musl variant if available

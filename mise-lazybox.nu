@@ -47,8 +47,10 @@ export def main [
             "" | save -f $lockfile_path
         }
 
-        # Step 2: Generate lockfile from mise.toml and expand with cross-platform data
-        generate_expanded_lockfile $mise_toml $lockfile_path $update_lock $real_lockfile_path
+        # Step 2: Generate lockfile from mise.toml and expand with cross-platform data (only if updating)
+        if $update_lock {
+            generate_expanded_lockfile $mise_toml $lockfile_path $update_lock $real_lockfile_path
+        }
 
         # Step 3: Parse lockfile and map binaries
         let tools_data = (parse_lockfile_and_map_binaries $lockfile_path)
