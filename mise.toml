@@ -12,6 +12,7 @@ aqua.minisign = false
 "aqua:docker/buildx" = "0.27.0"
 "aqua:docker/compose" = "2.39.2"
 "github:nushell/nushell" = "0.107.0"  # github due to arm64
+"github:cue-lang/cue" = "0.15.1"
 "aqua:go-task/task" = "3.44.1"
 "aqua:casey/just" = "1.42.4"
 "aqua:getsops/sops" = "3.11.0"
