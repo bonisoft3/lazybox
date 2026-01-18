@@ -25,7 +25,7 @@ def run_mise_in_directory [dir: string, token: string, operations: closure] {
 
 # Trust and install mise tools
 def trust_and_install_mise [] {
-    ^mise trust --quiet
+    ^mise trust -y -a -q
     ^mise uninstall -a
     ^mise install
 }

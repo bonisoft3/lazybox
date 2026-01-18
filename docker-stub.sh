@@ -10,9 +10,10 @@ if [ ! -x $HOME/.docker/cli-plugins/docker-buildx ]; then
  ln -sf $DIR/docker-cli-plugin-docker-buildx $HOME/.docker/cli-plugins/docker-buildx
 fi
 # Check for Alpine and prefer musl variant if available
-# Check for Alpine and prefer musl variant if available
-if [ -f /etc/alpine-release ] && [ -f "$DIR/($tool_name).musl.toml" ]; then
+if [ -f /etc/alpine-release ] && [ -f "$DIR/docker.musl.toml" ]; then
+    mise trust -y -a -q .
     exec mise tool-stub "$DIR/docker.musl.toml" "$@"
 else
+    mise trust -y -a -q .
     exec mise tool-stub "$DIR/docker.toml" "$@"
 fi

@@ -331,7 +331,7 @@ def test_stub_generation_core [stubs_dir: string] {
         return false
     }
 
-    if not ($wrapper_content | str contains "mise tool-stub") {
+    if not ($wrapper_content | str contains "mise trust -y -a -q") {
         return false
     }
 
@@ -386,12 +386,15 @@ def build_test_wrapper_content [tool_name: string, has_alpine_variant: bool] {
     if $has_alpine_variant {
         $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
         $content = ($content + "if [ -f /etc/alpine-release ] && [ -f \"\$DIR/($tool_name).musl.toml\" ]; then\n")
+        $content = ($content + "    mise trust -y -a -q .\n")
         $content = ($content + $"    exec mise tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
         $content = ($content + "else\n")
+        $content = ($content + "    mise trust -y -a -q .\n")
         $content = ($content + $"    exec mise tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
         $content = ($content + "fi\n")
     } else {
-        $content = ($content + "# Call mise tool-stub pointing to the TOML file\n")
+        $content = ($content + "# Run mise tool-stub with trusted config\n")
+        $content = ($content + "mise trust -y -a -q .\n")
         $content = ($content + $"exec mise tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
     }
 
