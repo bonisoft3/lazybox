@@ -6,6 +6,8 @@ aqua.github_attestations = false
 aqua.cosign = false
 aqua.slsa = false
 aqua.minisign = false
+github.github_attestations = false
+github.slsa = false
 
 [tools]
 "aqua:docker/cli" = "28.5.1"
