@@ -5,7 +5,7 @@
 
 use mise-lockfile.nu [generate_expanded_lockfile, expand_lockfile_platforms]
 use mise-platform.nu *
-use mise-stub.nu [create_tool_stubs, parse_lockfile_and_map_binaries]
+use mise-stub.nu [create_tool_stubs, parse_lockfile_and_map_binaries, write_extra_stub_artifacts]
 
 export def main [
     --mise-toml(-m): string = "./mise.toml"  # Path to mise.toml file
@@ -63,6 +63,7 @@ export def main [
         # Step 4: Generate tool stubs
         ^mkdir -p $stubs_dir
         let created_stubs = (create_tool_stubs $tools_data $stubs_dir $force $alpine)
+        write_extra_stub_artifacts $tools_data $stubs_dir $alpine
 
         print $"\n📦 Created ($created_stubs | length) tool stubs in ($stubs_dir)"
         if ($created_stubs | length) > 0 {

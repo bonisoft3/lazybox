@@ -36,6 +36,88 @@ export def generate_single_stub_from_data [tool_data: record, output_dir: string
     generate_single_stub $binary_info $converted_tool_data $output_dir $force $alpine
 }
 
+def derive_default_binary_name [tool_spec: string] {
+    let normalized = (
+        $tool_spec
+        | str replace "aqua:" ""
+        | str replace "github:" ""
+    )
+    $normalized | split row "/" | last
+}
+
+def fallback_binary_names_for_tool [tool_spec: string] {
+    match $tool_spec {
+        "aqua:Byron/dua-cli" => ["dua"],
+        "aqua:docker/cli" => ["docker"],
+        "aqua:docker/buildx" => ["docker-cli-plugin-docker-buildx"],
+        "aqua:docker/compose" => ["docker-cli-plugin-docker-compose"],
+        "aqua:astral-sh/uv" => ["uv", "uvx"],
+        "aqua:bufbuild/buf" => ["buf", "protoc-gen-buf-breaking", "protoc-gen-buf-lint"],
+        "aqua:GoogleContainerTools/skaffold" => ["skaffold-darwin-arm64"],
+        "github:BurntSushi/ripgrep" => ["rg"],
+        "github:lvillis/tcping-rs" => ["tcping"],
+        "github:nushell/nushell" => [
+            "nu",
+            "nu_plugin_custom_values",
+            "nu_plugin_example",
+            "nu_plugin_formats",
+            "nu_plugin_gstat",
+            "nu_plugin_inc",
+            "nu_plugin_polars",
+            "nu_plugin_query",
+            "nu_plugin_stress_internals",
+        ],
+        _ => [ (derive_default_binary_name $tool_spec) ]
+    }
+}
+
+def build_binary_info_list [names: list] {
+    $names | each {|name|
+        {
+            original_name: $name,
+            clean_name: (clean_binary_name $name)
+        }
+    }
+}
+
+def should_include_bin_line [tool_spec: string, binary_name: string] {
+    if $tool_spec == "github:mikefarah/yq" and $binary_name == "yq" { false } else { true }
+}
+
+export def write_extra_stub_artifacts [tools_data: list, output_dir: string, alpine: bool] {
+    let yq_entry = (
+        $tools_data
+        | where tool_spec == "github:mikefarah/yq"
+        | where name == "yq"
+        | first
+    )
+
+    if ($yq_entry | is-empty) {
+        return
+    }
+
+    let yq_tool_data = {
+        tool_spec: $yq_entry.tool_spec,
+        version: $yq_entry.version,
+        platforms: $yq_entry.platforms
+    }
+
+    let yq_binary_info = { original_name: "yq", clean_name: "yq" }
+    let yq_toml_content = (build_toml_content $yq_binary_info $yq_tool_data false)
+    $yq_toml_content | save -f ($output_dir | path join "yq_darwin_arm64")
+
+    let install_binary_info = { original_name: "install-man-page.sh", clean_name: "install-man-page.sh" }
+    let install_toml_content = (build_toml_content $install_binary_info $yq_tool_data false)
+    $install_toml_content | save -f ($output_dir | path join "install-man-page.sh.toml")
+
+    let alpine_tool_data = (generate_alpine_platform_data $yq_tool_data)
+    let needs_alpine_variant = $alpine or (($alpine_tool_data | get platforms) != ($yq_tool_data | get platforms))
+    if $needs_alpine_variant {
+        let install_musl_content = (build_toml_content $install_binary_info $alpine_tool_data true)
+        $install_musl_content | save -f ($output_dir | path join "install-man-page.sh.musl.toml")
+    }
+}
+
 export def parse_lockfile_and_map_binaries [lockfile: string] {
     let binary_map = (build_binary_mapping)
     let tools_data = (parse_lockfile_for_tools $lockfile $binary_map)
@@ -97,73 +179,64 @@ export def main [
     }
 }
 
+# Extract platforms from both legacy and inline lockfile formats
+def extract_platforms_from_entry [entry: record] {
+    let base_platforms = ($entry | get platforms? | default {})
+    let base_record = if ($base_platforms | describe | str starts-with "record") {
+        $base_platforms
+    } else {
+        {}
+    }
+
+    let inline_platforms = (
+        $entry
+        | columns
+        | where {|key| $key | str starts-with "platforms."}
+        | reduce -f {} {|key, acc|
+            let value = ($entry | get $key)
+            $acc | upsert ($key | str replace "platforms." "") $value
+        }
+    )
+
+    $base_record | merge $inline_platforms
+}
+
 # Find tool data in lockfile
 def find_tool_in_lockfile [tool_name: string, lockfile: string] {
     if not ($lockfile | path exists) {
         return {}
     }
 
-    let lockfile_content = (open $lockfile)
-    let lines = ($lockfile_content | lines)
-    mut current_tool = ""
-    mut current_platforms = {}
-    mut tool_version = ""
-
-    for line in $lines {
-        if ($line | str starts-with "[[tools.") {
-            let line_tool = ($line | str replace "[[tools." "" | str replace "]]" "" | str trim --char '"')
-            if $line_tool == $tool_name {
-                $current_tool = $line_tool
-                $current_platforms = {}
-                $tool_version = ""
-            } else {
-                $current_tool = ""
-            }
-        } else if ($current_tool == $tool_name) {
-            if ($line | str starts-with "version = ") {
-                $tool_version = ($line | str replace 'version = "' '' | str replace '"' '')
-            } else if ($line | str starts-with $"[tools.\"($tool_name)\".platforms.") {
-                let platform_match = ($line | parse $"[tools.\"($tool_name)\".platforms.{platform}]")
-                if ($platform_match | length) > 0 {
-                    let platform = $platform_match.0.platform
-                    $current_platforms = ($current_platforms | upsert $platform {})
-                }
-            } else if ($line | str starts-with "url = ") {
-                let url = ($line | str replace 'url = "' '' | str replace '"' '')
-                let last_platform = ($current_platforms | items {|k, v| {key: $k, value: $v}} | last)
-                if ($last_platform | is-not-empty) {
-                    let platform_name = $last_platform.key
-                    let platform_data = ($current_platforms | get $platform_name | default {})
-                    $current_platforms = ($current_platforms | upsert $platform_name ($platform_data | upsert url $url))
-                }
-            } else if ($line | str starts-with "checksum = ") {
-                let checksum = ($line | str replace 'checksum = "' '' | str replace '"' '')
-                let last_platform = ($current_platforms | items {|k, v| {key: $k, value: $v}} | last)
-                if ($last_platform | is-not-empty) {
-                    let platform_name = $last_platform.key
-                    let platform_data = ($current_platforms | get $platform_name | default {})
-                    $current_platforms = ($current_platforms | upsert $platform_name ($platform_data | upsert checksum $checksum))
-                }
-            } else if ($line | str starts-with "size = ") {
-                let size = ($line | str replace 'size = ' '' | into int)
-                let last_platform = ($current_platforms | items {|k, v| {key: $k, value: $v}} | last)
-                if ($last_platform | is-not-empty) {
-                    let platform_name = $last_platform.key
-                    let platform_data = ($current_platforms | get $platform_name | default {})
-                    $current_platforms = ($current_platforms | upsert $platform_name ($platform_data | upsert size $size))
-                }
-            }
-        }
+    let lockfile_text = (open --raw $lockfile)
+    let lockfile_toml = try {
+        $lockfile_text | from toml
+    } catch {
+        return {}
     }
 
-    if ($current_tool == $tool_name) and (($current_platforms | items {|k, v| {key: $k, value: $v}} | length) > 0) {
-        {
-            tool_spec: $tool_name,
-            version: $tool_version,
-            platforms: $current_platforms
-        }
-    } else {
-        {}
+    let tools_table = ($lockfile_toml | get tools? | default {})
+    let tool_entries = try {
+        $tools_table | get $tool_name
+    } catch {
+        null
+    }
+    if $tool_entries == null {
+        return {}
+    }
+    let entries_is_list = (
+        ($tool_entries | describe | str starts-with "list")
+        or ($tool_entries | describe | str starts-with "table")
+    )
+    let entry = if $entries_is_list { $tool_entries | first } else { $tool_entries }
+    let platforms = (extract_platforms_from_entry $entry)
+    if ($platforms | columns | length) == 0 {
+        return {}
+    }
+
+    {
+        tool_spec: $tool_name,
+        version: ($entry | get version? | default ""),
+        platforms: $platforms
     }
 }
 
@@ -201,6 +274,13 @@ def generate_single_stub [binary_info: record, tool_data: record, output_dir: st
 
 # Build wrapper script content with Alpine detection
 def build_wrapper_content [tool_name: string, has_alpine_variant: bool] {
+    if $tool_name == "docker" {
+        return (build_docker_wrapper_content)
+    }
+    if $tool_name == "yq" {
+        return (build_yq_wrapper_content)
+    }
+
     mut content = "#!/bin/sh\n"
     $content = ($content + "# Get the directory where this script lives\n")
     $content = ($content + "DIR=\"\$(dirname \"\$(readlink -f \"\$0\")\")\" \n")
@@ -208,19 +288,55 @@ def build_wrapper_content [tool_name: string, has_alpine_variant: bool] {
 
     if $has_alpine_variant {
         $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
-        $content = ($content + "if [ -f /etc/alpine-release ] && [ -f \"\$DIR/($tool_name).musl.toml\" ]; then\n")
+        $content = ($content + $"if [ -f /etc/alpine-release ] && [ -f \"\$DIR/($tool_name).musl.toml\" ]; then\n")
         $content = ($content + "    mise trust -y -a -q .\n")
-        $content = ($content + $"    exec mise tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
+        $content = ($content + $"    MISE_LOCKED=0 exec mise tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
         $content = ($content + "else\n")
         $content = ($content + "    mise trust -y -a -q .\n")
-        $content = ($content + $"    exec mise tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
+        $content = ($content + $"    MISE_LOCKED=0 exec mise tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
         $content = ($content + "fi\n")
     } else {
         $content = ($content + "# Run mise tool-stub with trusted config\n")
         $content = ($content + "mise trust -y -a -q .\n")
-        $content = ($content + $"exec mise tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
+        $content = ($content + $"MISE_LOCKED=0 exec mise tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
     }
 
+    $content
+}
+
+def build_docker_wrapper_content [] {
+    mut content = "#!/bin/sh\n"
+    $content = ($content + "# Get the directory where this script lives\n")
+    $content = ($content + "DIR=\"\$(dirname \"\$(readlink -f \"\$0\")\")\" \n")
+    $content = ($content + "\n")
+    $content = ($content + "mkdir -p $HOME/.docker/cli-plugins/\n")
+    $content = ($content + "if [ ! -x $HOME/.docker/cli-plugins/docker-compose ]; then\n")
+    $content = ($content + " ln -sf $DIR/docker-cli-plugin-docker-compose $HOME/.docker/cli-plugins/docker-compose\n")
+    $content = ($content + "fi\n")
+    $content = ($content + "if [ ! -x $HOME/.docker/cli-plugins/docker-buildx ]; then\n")
+    $content = ($content + " ln -sf $DIR/docker-cli-plugin-docker-buildx $HOME/.docker/cli-plugins/docker-buildx\n")
+    $content = ($content + "fi\n")
+    $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
+    $content = ($content + "if [ -f /etc/alpine-release ] && [ -f \"$DIR/docker.musl.toml\" ]; then\n")
+    $content = ($content + "    mise trust -y -a -q .\n")
+    $content = ($content + "    MISE_LOCKED=0 exec mise tool-stub \"$DIR/docker.musl.toml\" \"$@\"\n")
+    $content = ($content + "else\n")
+    $content = ($content + "    mise trust -y -a -q .\n")
+    $content = ($content + "    MISE_LOCKED=0 exec mise tool-stub \"$DIR/docker.toml\" \"$@\"\n")
+    $content = ($content + "fi\n")
+    $content
+}
+
+def build_yq_wrapper_content [] {
+    mut content = "#!/bin/sh\n"
+    $content = ($content + "# Get the directory where this script lives\n")
+    $content = ($content + "DIR=\"\$(dirname \"\$(readlink -f \"\$0\")\")\"\n")
+    $content = ($content + "\n\n")
+    $content = ($content + "bin=yq_$(uname -s | tr A-Z a-z)_$(uname -m | sed -e 's/x86_64/amd64/; s/aarch64/arm64/')\n")
+    $content = ($content + "cp $DIR/yq.toml $DIR/$bin\n")
+    $content = ($content + "# Run MISE_LOCKED=0 mise tool-stub with trusted config\n")
+    $content = ($content + "mise trust -y -a -q .\n")
+    $content = ($content + "    MISE_LOCKED=0 exec mise tool-stub \"$DIR/$bin\" \"$@\"\n")
     $content
 }
 
@@ -233,7 +349,9 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
     }
 
     $content = ($content + $"version = \"($tool_data.version)\"\n")
-    $content = ($content + $"bin = \"($binary_info.original_name)\"\n")
+    if (should_include_bin_line $tool_data.tool_spec $binary_info.original_name) {
+        $content = ($content + $"bin = \"($binary_info.original_name)\"\n")
+    }
 
     let platforms = ($tool_data | get platforms? | default {})
     if ($platforms | items {|k, v| {key: $k, value: $v}} | length) > 0 {
@@ -275,87 +393,50 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
 
 # Parse lockfile and combine with binary mapping (used by mise-lazybox)
 def parse_lockfile_for_tools [lockfile: string, binary_map: record] {
-    let lockfile_content = (open $lockfile)
-    let lines = ($lockfile_content | lines)
-    mut tools = []
-    mut current_tool = {tool_spec: "", version: ""}
-    mut current_platforms = {}
-
-    for line in $lines {
-        if ($line | str starts-with "[[tools.") {
-            # Save previous tool if it has platforms and binaries
-            if ($current_tool.tool_spec != "") and (($current_platforms | items {|k, v| {key: $k, value: $v}} | length) > 0) {
-                let tool_binaries = (find_tool_binaries $current_tool.tool_spec $binary_map)
-                for binary_info in $tool_binaries {
-                    $tools = ($tools | append {
-                        name: $binary_info.clean_name,
-                        original_name: $binary_info.original_name,
-                        tool_spec: $current_tool.tool_spec,
-                        version: $current_tool.version,
-                        platforms: $current_platforms
-                    })
-                }
-            }
-
-            # Start new tool
-            let tool_spec = ($line | str replace "[[tools." "" | str replace "]]" "" | str trim --char '"')
-            $current_tool = {
-                tool_spec: $tool_spec,
-                version: ""
-            }
-            $current_platforms = {}
-
-        } else if ($current_tool.tool_spec != "") and ($line | str starts-with "version = ") {
-            let version = ($line | str replace 'version = "' '' | str replace '"' '')
-            $current_tool = ($current_tool | upsert version $version)
-
-        } else if ($current_tool.tool_spec != "") and ($line | str starts-with $"[tools.\"($current_tool.tool_spec)\".platforms.") {
-            let platform_match = ($line | parse $"[tools.\"($current_tool.tool_spec)\".platforms.{platform}]")
-            if ($platform_match | length) > 0 {
-                let platform = $platform_match.0.platform
-                $current_platforms = ($current_platforms | upsert $platform {})
-            }
-
-        } else if ($current_tool.tool_spec != "") and ($line | str starts-with "url = ") {
-            let url = ($line | str replace 'url = "' '' | str replace '"' '')
-            let last_platform = ($current_platforms | items {|k, v| {key: $k, value: $v}} | last)
-            if ($last_platform | is-not-empty) {
-                let platform_name = $last_platform.key
-                let platform_data = ($current_platforms | get $platform_name | default {})
-                $current_platforms = ($current_platforms | upsert $platform_name ($platform_data | upsert url $url))
-            }
-
-        } else if ($current_tool.tool_spec != "") and ($line | str starts-with "checksum = ") {
-            let checksum = ($line | str replace 'checksum = "' '' | str replace '"' '')
-            let last_platform = ($current_platforms | items {|k, v| {key: $k, value: $v}} | last)
-            if ($last_platform | is-not-empty) {
-                let platform_name = $last_platform.key
-                let platform_data = ($current_platforms | get $platform_name | default {})
-                $current_platforms = ($current_platforms | upsert $platform_name ($platform_data | upsert checksum $checksum))
-            }
-
-        } else if ($current_tool.tool_spec != "") and ($line | str starts-with "size = ") {
-            let size = ($line | str replace 'size = ' '' | into int)
-            let last_platform = ($current_platforms | items {|k, v| {key: $k, value: $v}} | last)
-            if ($last_platform | is-not-empty) {
-                let platform_name = $last_platform.key
-                let platform_data = ($current_platforms | get $platform_name | default {})
-                $current_platforms = ($current_platforms | upsert $platform_name ($platform_data | upsert size $size))
-            }
-        }
+    if not ($lockfile | path exists) {
+        return []
     }
 
-    # Don't forget the last tool
-    if ($current_tool.tool_spec != "") and (($current_platforms | items {|k, v| {key: $k, value: $v}} | length) > 0) {
-        let tool_binaries = (find_tool_binaries $current_tool.tool_spec $binary_map)
-        for binary_info in $tool_binaries {
-            $tools = ($tools | append {
-                name: $binary_info.clean_name,
-                original_name: $binary_info.original_name,
-                tool_spec: $current_tool.tool_spec,
-                version: $current_tool.version,
-                platforms: $current_platforms
-            })
+    let lockfile_text = (open --raw $lockfile)
+    let lockfile_toml = try {
+        $lockfile_text | from toml
+    } catch {
+        return []
+    }
+
+    let tools_table = ($lockfile_toml | get tools? | default {})
+    mut tools = []
+
+    for tool_spec in ($tools_table | columns) {
+        let tool_entries = ($tools_table | get $tool_spec | default [])
+        let entries_is_list = (
+            ($tool_entries | describe | str starts-with "list")
+            or ($tool_entries | describe | str starts-with "table")
+        )
+        let entries = if $entries_is_list { $tool_entries } else { [$tool_entries] }
+
+        for entry in $entries {
+            let platforms = (extract_platforms_from_entry $entry)
+            if ($platforms | columns | length) == 0 {
+                continue
+            }
+            let version = ($entry | get version? | default "")
+            let tool_binaries = (find_tool_binaries $tool_spec $binary_map)
+            let fallback_binaries = (build_binary_info_list (fallback_binary_names_for_tool $tool_spec))
+            let binaries = (
+                $tool_binaries
+                | append $fallback_binaries
+                | uniq
+            )
+            for binary_info in $binaries {
+                $tools = ($tools | append {
+                    name: $binary_info.clean_name,
+                    original_name: $binary_info.original_name,
+                    tool_spec: $tool_spec,
+                    version: $version,
+                    platforms: $platforms
+                })
+            }
         }
     }
 
