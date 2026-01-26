@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 SCRIPT_PATH=$(dirname $(realpath "$0"))
 LAZYBOX_HOME="$SCRIPT_PATH/../../.."
-MISE_VERSION=2026.1.2
+MISE_VERSION=2026.1.7
 if [ ! -x "$LAZYBOX_HOME/bin/mise" ]; then
 	ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
 	OS=$(uname -s | tr "[:upper:]" "[:lower:]" | sed 's/darwin/macos/')

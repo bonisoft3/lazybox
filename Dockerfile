@@ -26,7 +26,7 @@ COPY --chmod=0755 env-shim.sh /tmp/
 RUN mv /tmp/env-shim.sh $HOME/.local/share/lazybox/shims/curl
 
 FROM bbcurl AS lazybox-builder
-ENV MISE_VERSION=2026.1.2
+ENV MISE_VERSION=2026.1.7
 RUN mkdir -p $HOME/.local/bin
 COPY lazy-mise.sh .
 RUN mv lazy-mise.sh $HOME/.local/share/lazybox/libexec/mise
