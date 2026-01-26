@@ -38,4 +38,4 @@ github.slsa = false
 "github:mikefarah/yq" = "4.44.2"
 "github:dbohdan/recur" = "3.0.0"
 "github:lvillis/tcping-rs" = "1.2.21"
-"aqua:vi/websocat" = "1.14.0"
+"aqua:vi/websocat" = "1.14.1"

@@ -348,6 +348,7 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
         "# Auto-generated stub for ($binary_info.clean_name)\n\n"
     }
 
+    $content = ($content + $"tool = \"($tool_data.tool_spec)\"\n")
     $content = ($content + $"version = \"($tool_data.version)\"\n")
     if (should_include_bin_line $tool_data.tool_spec $binary_info.original_name) {
         $content = ($content + $"bin = \"($binary_info.original_name)\"\n")
