@@ -1,5 +1,6 @@
 [settings]
 lockfile = true
+locked = true
 experimental = true
 paranoid = false
 aqua.github_attestations = false
