@@ -33,7 +33,8 @@ RUN mv lazy-mise.sh $HOME/.local/share/lazybox/libexec/mise
 COPY --chmod=0755 env-shim.sh /tmp/
 RUN mv /tmp/env-shim.sh $HOME/.local/share/lazybox/shims/mise
 COPY --chmod=0755 *.nu .
-COPY mise.toml mise.lock ./
+COPY mise.toml .mise.alpine.lock ./
+RUN cp .mise.alpine.lock mise.lock
 RUN mise -q trust
 RUN mise install
 RUN $HOME/.local/share/mise/shims/nu mise-lazybox.nu -f -o $HOME/.local/share/lazybox/stubs/
