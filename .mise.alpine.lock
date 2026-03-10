@@ -226,7 +226,7 @@ backend = "github:lsd-rs/lsd"
 "platforms.darwin-arm64" = { checksum = "sha256:d39006922babb1a96806e8f3f3bc197276c807a625617091c43836d8924a0c07", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-aarch64-apple-darwin.tar.gz"}
 "platforms.linux-amd64" = { checksum = "sha256:af10fbef2472134c676396a27ecfffb34adb107da2f95d0453a3150ced33ae47", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-unknown-linux-musl.tar.gz"}
 "platforms.linux-arm64" = { checksum = "sha256:dd84c4add323288ff3dc072955e4ff2364a074a68bf9f1a6fb6556ad310c723b", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-aarch64-unknown-linux-musl.tar.gz"}
-"platforms.linux-x64" = { checksum = "sha256:af10fbef2472134c676396a27ecfffb34adb107da2f95d0453a3150ced33ae47", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-unknown-linux-musl.tar.gz"}
+"platforms.linux-x64" = { checksum = "sha256:af10fbef2472134c676396a27ecfffb34adb107da2f95d0453a3150ced33ae47", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/187198047"}
 "platforms.macos-arm64" = { checksum = "blake3:9fb601943484b54b9b01dbb980f1aea11b54d7535cabaa014209fc71526d54bf", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-aarch64-apple-darwin.tar.gz"}
 "platforms.windows-amd64" = { checksum = "sha256:0260b74376ced7a699a9e86eec1b5aa4cf1ad739c30829e0b53fc1be4adeaba1", url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-pc-windows-msvc.zip", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/187197460"}
 
