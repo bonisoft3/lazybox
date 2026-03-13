@@ -11,31 +11,50 @@ github.github_attestations = false
 github.slsa = false
 
 [tools]
-"aqua:docker/cli" = "28.5.1"
-"aqua:docker/buildx" = "0.27.0"
-"aqua:docker/compose" = "2.39.2"
+"github:docker/buildx" = "0.27.0"
+"github:docker/compose" = "2.39.2"
 "github:nushell/nushell" = "0.107.0"  # github due to arm64
 "github:cue-lang/cue" = "0.15.1"
 "github:go-task/task" = "v3.49.1"
-"aqua:casey/just" = "1.42.4"
-"aqua:getsops/sops" = "3.11.0"
-"aqua:bufbuild/buf" = "1.57.2"
-"aqua:GoogleContainerTools/skaffold" = "2.16.1"
-"aqua:kubernetes-sigs/kind" = "0.30"
-"aqua:zyedidia/micro" = "2.0.14"
-"aqua:sharkdp/bat" = "0.25.0"
-"aqua:sharkdp/fd" = "10.3.0"
-"aqua:junegunn/fzf" = "0.65.2"
-"aqua:ducaale/xh" = "0.25.0"
-"aqua:ajeetdsouza/zoxide" = "0.9.8"
-"aqua:jqlang/jq" = "jq-1.8.1"
+"github:casey/just" = "1.42.4"
+"github:getsops/sops" = "3.11.0"
+"github:bufbuild/buf" = "1.57.2"
+"github:kubernetes-sigs/kind" = "0.30"
+"github:micro-editor/micro" = "2.0.14"
+"github:sharkdp/bat" = "0.25.0"
+"github:sharkdp/fd" = "10.3.0"
+"github:junegunn/fzf" = "0.65.2"
+"github:ducaale/xh" = "0.25.0"
+"github:ajeetdsouza/zoxide" = "0.9.8"
+"github:jqlang/jq" = "jq-1.8.1"
 "github:BurntSushi/ripgrep" = "14.1.1"
-"aqua:kubernetes/kubernetes/kubectl" = "1.34.1"
 "aqua:Byron/dua-cli" = "2.32.0"
 "github:sharkdp/hyperfine" = "1.19.0"
 "github:lsd-rs/lsd" = "1.1.5"
-"aqua:astral-sh/uv" = "0.6.14"
+"github:astral-sh/uv" = "0.6.14"
 "github:mikefarah/yq" = "4.44.2"
 "github:dbohdan/recur" = "3.0.0"
 "github:lvillis/tcping-rs" = "1.2.21"
-"aqua:vi/websocat" = "1.14.1"
+
+# http: backend — URL templates work for macOS/Linux; Windows overrides below.
+[tools."http:docker-cli"]
+version = "28.5.1"
+url = 'https://download.docker.com/{{ os(macos="mac") }}/static/stable/{{ arch(x64="x86_64", arm64="aarch64") }}/docker-{{ version }}.tgz'
+bin_path = "docker/docker"
+
+[tools."http:docker-cli".platforms]
+windows-x64 = { url = 'https://download.docker.com/win/static/stable/x86_64/docker-{{ version }}.zip' }
+
+[tools."http:skaffold"]
+version = "2.16.1"
+url = 'https://storage.googleapis.com/skaffold/releases/v{{ version }}/skaffold-{{ os(macos="darwin") }}-{{ arch(x64="amd64") }}'
+
+[tools."http:skaffold".platforms]
+windows-x64 = { url = 'https://storage.googleapis.com/skaffold/releases/v{{ version }}/skaffold-windows-amd64.exe' }
+
+[tools."http:kubectl"]
+version = "1.34.1"
+url = 'https://dl.k8s.io/v{{ version }}/bin/{{ os(macos="darwin") }}/{{ arch(x64="amd64") }}/kubectl'
+
+[tools."http:kubectl".platforms]
+windows-x64 = { url = 'https://dl.k8s.io/v{{ version }}/bin/windows/amd64/kubectl.exe' }
