@@ -40,11 +40,10 @@ RUN mise install
 RUN $HOME/.local/share/mise/shims/nu mise-lazybox.nu -f -o $HOME/.local/share/lazybox/stubs/
 COPY --chmod=0755 docker-stub.sh $HOME/.local/share/lazybox/stubs/docker
 COPY --chmod=0755 yq-stub.sh $HOME/.local/share/lazybox/stubs/yq
-RUN rm -rf $HOME/.local/share/mise $HOME/.cache
 RUN yq --help  # quick test
 RUN docker compose version  # quick test
 RUN kubectl --help  # quick test
-# clean again after tests
+# clean up after tests
 RUN rm -rf $HOME/.local/share/mise $HOME/.cache $HOME/.local/bin/mise
 
 FROM ${BASE_IMG:-scratchy} AS lazybox
