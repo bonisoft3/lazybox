@@ -1,0 +1,12 @@
+#!/bin/sh
+# Get the directory where this script lives
+DIR="$(dirname "$(readlink -f "$0")")" 
+
+# Check for Alpine and prefer musl variant if available
+if [ -f /etc/alpine-release ] && [ -f "$DIR/docker-cli-plugin-docker-buildx.musl.toml" ]; then
+    mise trust -y -a -q .
+    MISE_LOCKED=0 exec mise tool-stub "$DIR/docker-cli-plugin-docker-buildx.musl.toml" "$@"
+else
+    mise trust -y -a -q .
+    MISE_LOCKED=0 exec mise tool-stub "$DIR/docker-cli-plugin-docker-buildx.toml" "$@"
+fi

@@ -38,7 +38,13 @@ RUN cp .mise.alpine.lock mise.lock
 RUN mise -q trust
 RUN mise install
 RUN $HOME/.local/share/mise/shims/nu mise-lazybox.nu -f -o $HOME/.local/share/lazybox/stubs/
+# Override docker stubs — mise-lazybox.nu generates incorrect bin paths for http: tools
 COPY --chmod=0755 docker-stub.sh $HOME/.local/share/lazybox/stubs/docker
+COPY docker.toml docker.musl.toml $HOME/.local/share/lazybox/stubs/
+COPY --chmod=0755 docker-cli-plugin-docker-compose docker-cli-plugin-docker-buildx $HOME/.local/share/lazybox/stubs/
+COPY docker-cli-plugin-docker-compose.toml docker-cli-plugin-docker-compose.musl.toml docker-cli-plugin-docker-buildx.toml docker-cli-plugin-docker-buildx.musl.toml $HOME/.local/share/lazybox/stubs/
+COPY --chmod=0755 kubectl $HOME/.local/share/lazybox/stubs/kubectl
+COPY kubectl.toml kubectl.musl.toml $HOME/.local/share/lazybox/stubs/
 COPY --chmod=0755 yq-stub.sh $HOME/.local/share/lazybox/stubs/yq
 RUN yq --help  # quick test
 RUN docker compose version  # quick test

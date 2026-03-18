@@ -1,0 +1,31 @@
+# Auto-generated stub for ($binary_info.clean_name)
+
+version = "0.27.0"
+bin = "docker-cli-plugin-docker-buildx"
+
+# Platform configurations
+[platforms.darwin-amd64]
+url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.darwin-amd64"
+checksum = "sha256:eb9bd8a34f31dcbf103140ca6a461b6fdff47e85c62a91464413611b3f0d361f"
+
+[platforms.darwin-arm64]
+url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.darwin-arm64"
+checksum = "sha256:068ba6899684dc390a275377632e23feda29b08f1996cd27fbdb209d8d97abd5"
+
+[platforms.linux-amd64]
+url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.linux-amd64"
+checksum = "sha256:4f5e5a1b6dd0d6ff8476c8def7602d1eeedcb6f602e8dcd45079d352247eba06"
+
+[platforms.linux-arm64]
+url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.linux-arm64"
+checksum = "sha256:e3519d085710d2502c673380f763596ae0b378d0ae8976ccbb14adaed82327ef"
+
+[platforms.macos-arm64]
+url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.darwin-arm64"
+checksum = "blake3:48bfafbc3ff4f6d61363b39ffb2b8b3cdbfc9a8d9d17bcec8385a5e5953df395"
+
+[platforms.windows-amd64]
+url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.windows-amd64.exe"
+checksum = "sha256:1e89de288c9897990220d2ee695b50956d42a3a0792c0b070e9fee7711b9f896"
+bin = "docker-cli-plugin-docker-buildx.exe"
+

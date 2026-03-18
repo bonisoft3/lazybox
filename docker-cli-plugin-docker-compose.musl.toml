@@ -1,0 +1,22 @@
+# Auto-generated Alpine/musl stub for ($binary_info.clean_name)
+
+version = "2.39.2"
+bin = "docker-cli-plugin-docker-compose"
+
+# Platform configurations
+[platforms.darwin-arm64]
+url = "https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-darwin-aarch64"
+checksum = "sha256:44ea135a29b176d959aed927d61d3483b3f0e7b4a2025ab7812aa00086916f13"
+
+[platforms.linux-amd64]
+url = "https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-linux-x86_64"
+checksum = "sha256:a55a8cd4ef103aac282812554e531aac8df7e914a287ee81e14d695556a22902"
+
+[platforms.linux-arm64]
+url = "https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-linux-aarch64"
+checksum = "sha256:54488fffb60782f3c8787a48b95ed15f49f5a3a85f4105304bd46db5edd9db61"
+
+[platforms.macos-arm64]
+url = "https://github.com/docker/compose/releases/download/v2.39.2/docker-compose-darwin-aarch64"
+checksum = "sha256:44ea135a29b176d959aed927d61d3483b3f0e7b4a2025ab7812aa00086916f13"
+

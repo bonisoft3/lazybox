@@ -12,8 +12,8 @@ fi
 # Check for Alpine and prefer musl variant if available
 if [ -f /etc/alpine-release ] && [ -f "$DIR/docker.musl.toml" ]; then
     mise trust -y -a -q .
-    exec mise tool-stub "$DIR/docker.musl.toml" "$@"
+    MISE_LOCKED=0 exec mise tool-stub "$DIR/docker.musl.toml" "$@"
 else
     mise trust -y -a -q .
-    exec mise tool-stub "$DIR/docker.toml" "$@"
+    MISE_LOCKED=0 exec mise tool-stub "$DIR/docker.toml" "$@"
 fi
