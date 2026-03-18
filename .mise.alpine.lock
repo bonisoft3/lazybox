@@ -50,6 +50,7 @@ checksum = "sha256:078cc9cc8cedb6c45edb84c0f5bad53518c610859c73bdb3009a52b89652c
 url = "https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.8/zoxide-0.9.8-aarch64-unknown-linux-musl.tar.gz"
 
 [tools."github:ajeetdsouza/zoxide"."platforms.linux-x64"]
+checksum = "sha256:4092ee38aa1efde42e4efb2f9c872df5388198aacae7f1a74e5eb5c3cc7f531c"
 url = "https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.8/zoxide-0.9.8-x86_64-unknown-linux-musl.tar.gz"
 
 [tools."github:ajeetdsouza/zoxide"."platforms.macos-arm64"]
@@ -408,6 +409,7 @@ checksum = "sha256:ee0f12cf6006a79cf4ccf75d2ddcf9f6ba124644503244b1af909c2f72a2a
 url = "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-aarch64-unknown-linux-musl.tar.gz"
 
 [tools."github:sharkdp/bat"."platforms.linux-x64"]
+checksum = "sha256:93f47d76abe328c402ef712e9ac92aa6d5bc84d5adcbcaf0bbc5665e5275a941"
 url = "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-musl.tar.gz"
 
 [tools."github:sharkdp/bat"."platforms.macos-arm64"]
@@ -464,6 +466,7 @@ checksum = "sha256:2e01b3ea62cdea3e62eb3ee99f6bffe84de06f689cf479173c4e7221b6613
 url = "https://github.com/micro-editor/micro/releases/download/v2.0.14/micro-2.0.14-linux-arm64.tar.gz"
 
 [tools."github:micro-editor/micro"."platforms.linux-x64"]
+checksum = "sha256:da6fefe16f09f90ae07d32f7c6be811a0acfd3e8edadfefccc9991ae78e9b229"
 url = "https://github.com/micro-editor/micro/releases/download/v2.0.14/micro-2.0.14-linux64-static.tar.gz"
 
 [tools."github:micro-editor/micro"."platforms.macos-arm64"]
@@ -590,10 +593,12 @@ version = "4.44.2"
 backend = "github:mikefarah/yq"
 
 [tools."github:mikefarah/yq"."platforms.linux-arm64"]
+checksum = "sha256:79c22d98b2ff517cb8b1c20499350cbc1e8c753483c8f72a37a299e6e9872a98"
 url = "https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_linux_arm64.tar.gz"
 url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/174040546"
 
 [tools."github:mikefarah/yq"."platforms.linux-x64"]
+checksum = "sha256:e4c2570249e3993e33ffa44e592b5eee8545bd807bfbeb596c2986d86cb6c85c"
 url = "https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_linux_amd64.tar.gz"
 url_api = "https://api.github.com/repos/mikefarah/yq/releases/assets/174040551"
 
@@ -654,6 +659,7 @@ url = "https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-
 url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205765093"
 
 [tools."github:sharkdp/hyperfine"."platforms.linux-x64"]
+checksum = "sha256:825287143f397774093539ca2458854ab3735c0e8a1aaf075c22edce7d261556"
 url = "https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-v1.19.0-x86_64-unknown-linux-musl.tar.gz"
 url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205765204"
 
