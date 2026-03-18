@@ -28,7 +28,6 @@ url = "https://github.com/Byron/dua-cli/releases/download/v2.32.0/dua-v2.32.0-x8
 checksum = "sha256:eb697c75361479c1e645cc4d7bb54bf83d6900e79159d308e5b363c36c0babe4"
 url = "https://github.com/Byron/dua-cli/releases/download/v2.32.0/dua-v2.32.0-x86_64-pc-windows-msvc.zip"
 
-
 [[tools."github:ajeetdsouza/zoxide"]]
 version = "0.9.8"
 backend = "github:ajeetdsouza/zoxide"
@@ -222,7 +221,6 @@ url_api = "https://api.github.com/repos/docker/buildx/releases/assets/284398474"
 checksum = "sha256:1e89de288c9897990220d2ee695b50956d42a3a0792c0b070e9fee7711b9f896"
 url = "https://github.com/docker/buildx/releases/download/v0.27.0/buildx-v0.27.0.windows-amd64.exe"
 url_api = "https://api.github.com/repos/docker/buildx/releases/assets/284355384"
-
 
 [[tools."github:docker/compose"]]
 version = "2.39.2"
@@ -457,7 +455,6 @@ checksum = "sha256:a75fed2b6964d877461cc145b37e997ac0f59a63bd02a750134ac25378f78
 url = "https://github.com/kubernetes-sigs/kind/releases/download/v0.30.0/kind-windows-amd64"
 url_api = "https://api.github.com/repos/kubernetes-sigs/kind/releases/assets/286839299"
 
-
 [[tools."github:sharkdp/bat"]]
 version = "0.25.0"
 backend = "github:sharkdp/bat"
@@ -535,7 +532,6 @@ checksum = "sha256:318aa2a6fa664325933e81fda60d523fff29444129e91ebf0726b5b3bcd8b
 url = "https://github.com/sharkdp/fd/releases/download/v10.3.0/fd-v10.3.0-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/286314811"
 
-
 [[tools."github:micro-editor/micro"]]
 version = "2.0.14"
 backend = "github:micro-editor/micro"
@@ -591,7 +587,6 @@ url_api = "https://api.github.com/repos/BurntSushi/ripgrep/releases/assets/19135
 [tools."github:BurntSushi/ripgrep"."platforms.linux-x64"]
 checksum = "sha256:4cf9f2741e6c465ffdb7c26f38056a59e2a2544b51f7cc128ef28337eeae4d8e"
 url = "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/BurntSushi/ripgrep/releases/assets/191354314"
 url_api = "https://api.github.com/repos/BurntSushi/ripgrep/releases/assets/191354314"
 
 [tools."github:BurntSushi/ripgrep"."platforms.macos-arm64"]
@@ -660,7 +655,6 @@ url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/187198074"
 checksum = "sha256:af10fbef2472134c676396a27ecfffb34adb107da2f95d0453a3150ced33ae47"
 url = "https://github.com/lsd-rs/lsd/releases/download/v1.1.5/lsd-v1.1.5-x86_64-unknown-linux-musl.tar.gz"
 url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/187198047"
-url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/187198047"
 
 [tools."github:lsd-rs/lsd"."platforms.macos-arm64"]
 checksum = "blake3:9fb601943484b54b9b01dbb980f1aea11b54d7535cabaa014209fc71526d54bf"
@@ -726,7 +720,6 @@ url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/28902856
 checksum = "sha256:dd369b7fedeed3add745bce2dc50e3fe71a7cb48f529456e8887d66f2cde585f"
 url = "https://github.com/nushell/nushell/releases/download/0.107.0/nu-0.107.0-x86_64-unknown-linux-musl.tar.gz"
 url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/289028844"
-url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/289028844"
 
 [tools."github:nushell/nushell"."platforms.macos-arm64"]
 checksum = "sha256:3bc70d98ab2fd94ad8244d233c92aa6e768ca2c91dd860a209ae6ba6d15f1051"
@@ -764,7 +757,6 @@ url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205765
 
 [tools."github:sharkdp/hyperfine"."platforms.linux-x64"]
 url = "https://github.com/sharkdp/hyperfine/releases/download/v1.19.0/hyperfine-v1.19.0-x86_64-unknown-linux-musl.tar.gz"
-url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205765204"
 url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205765204"
 
 [tools."github:sharkdp/hyperfine"."platforms.macos-arm64"]
