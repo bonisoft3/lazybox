@@ -1,4 +1,14 @@
 services:
+  launch:
+    build:
+      target: nubox
+    command: nu -l
+
+  integrate:
+    build:
+      target: lazybox
+    command: sh -c "jq --version && yq --version && bat --version && rg --version && echo 'All tools OK'"
+
   lazybox:
     build:
       target: lazybox
