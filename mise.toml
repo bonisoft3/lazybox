@@ -11,34 +11,34 @@ github.github_attestations = false
 github.slsa = false
 
 [tools]
-"github:docker/buildx" = "0.27.0"
-"github:docker/compose" = "2.39.2"
-"github:nushell/nushell" = "0.107.0"  # github due to arm64
-"github:cue-lang/cue" = "0.15.1"
+"github:docker/buildx" = "0.32.1"
+"github:docker/compose" = "5.1.0"
+"github:nushell/nushell" = "0.110.0"  # github due to arm64
+"github:cue-lang/cue" = "0.16.0"
 "github:go-task/task" = "v3.49.1"
-"github:casey/just" = "1.42.4"
-"github:getsops/sops" = "3.11.0"
-"github:bufbuild/buf" = "1.57.2"
-"github:kubernetes-sigs/kind" = "0.30"
-"github:micro-editor/micro" = "2.0.14"
-"github:sharkdp/bat" = "0.25.0"
-"github:sharkdp/fd" = "10.3.0"
-"github:junegunn/fzf" = "0.65.2"
-"github:ducaale/xh" = "0.25.0"
-"github:ajeetdsouza/zoxide" = "0.9.8"
+"github:casey/just" = "1.47.1"
+"github:getsops/sops" = "3.12.2"
+"github:bufbuild/buf" = "1.66.1"
+"github:kubernetes-sigs/kind" = "0.31.0"
+"github:micro-editor/micro" = "2.0.15"
+"github:sharkdp/bat" = "0.26.1"
+"github:sharkdp/fd" = "10.4.2"
+"github:junegunn/fzf" = "0.70.0"
+"github:ducaale/xh" = "0.25.3"
+"github:ajeetdsouza/zoxide" = "0.9.9"
 "github:jqlang/jq" = "jq-1.8.1"
-"github:BurntSushi/ripgrep" = "14.1.1"
-"aqua:Byron/dua-cli" = "2.32.0"
-"github:sharkdp/hyperfine" = "1.19.0"
-"github:lsd-rs/lsd" = "1.1.5"
-"github:astral-sh/uv" = "0.6.14"
-"github:mikefarah/yq" = "4.44.2"
-"github:dbohdan/recur" = "3.0.0"
-"github:lvillis/tcping-rs" = "1.2.21"
+"github:BurntSushi/ripgrep" = "15.1.0"
+"aqua:Byron/dua-cli" = "2.34.0"
+"github:sharkdp/hyperfine" = "1.20.0"
+"github:lsd-rs/lsd" = "1.2.0"
+"github:astral-sh/uv" = "0.10.12"
+"github:mikefarah/yq" = "4.52.4"
+"github:dbohdan/recur" = "3.2.0"
+"github:lvillis/tcping-rs" = "1.2.24"
 
 # http: backend — URL templates work for macOS/Linux; Windows overrides below.
 [tools."http:docker-cli"]
-version = "28.5.1"
+version = "29.3.0"
 url = 'https://download.docker.com/{{ os(macos="mac") }}/static/stable/{{ arch(x64="x86_64", arm64="aarch64") }}/docker-{{ version }}.tgz'
 bin_path = "docker/docker"
 
@@ -46,14 +46,14 @@ bin_path = "docker/docker"
 windows-x64 = { url = 'https://download.docker.com/win/static/stable/x86_64/docker-{{ version }}.zip' }
 
 [tools."http:skaffold"]
-version = "2.16.1"
+version = "2.18.1"
 url = 'https://storage.googleapis.com/skaffold/releases/v{{ version }}/skaffold-{{ os(macos="darwin") }}-{{ arch(x64="amd64") }}'
 
 [tools."http:skaffold".platforms]
 windows-x64 = { url = 'https://storage.googleapis.com/skaffold/releases/v{{ version }}/skaffold-windows-amd64.exe' }
 
 [tools."http:kubectl"]
-version = "1.34.1"
+version = "1.35.2"
 url = 'https://dl.k8s.io/v{{ version }}/bin/{{ os(macos="darwin") }}/{{ arch(x64="amd64") }}/kubectl'
 
 [tools."http:kubectl".platforms]
