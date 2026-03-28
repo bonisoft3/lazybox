@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+# lazybox bootstrap — finds or downloads mise, then delegates.
+# All paths are resolved explicitly (no PATH lookups) to avoid shim loops.
+set -eu
+PREFIX="$(dirname "$(realpath "$0")")/.."
+
+# Use bundled CA certs if available, otherwise trust host certs
+CERT="$PREFIX/share/ca-certificates/ca-certificates.crt"
+[ -f "$CERT" ] && export SSL_CERT_FILE="${SSL_CERT_FILE:-$CERT}"
+
+# Find mise: check known locations before downloading
+MISE_BIN=""
+for candidate in "$PREFIX/libexec/mise" "$PREFIX/bin/mise"; do
+    if [ -x "$candidate" ]; then
+        MISE_BIN="$candidate"
+        break
+    fi
+done
+
+if [ -z "$MISE_BIN" ]; then
+    MISE_BIN="$PREFIX/libexec/mise"
+    MISE_VERSION=2026.3.5
+    ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
+    OS=$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/darwin/macos/')
+    LIBC=; [ "$OS" = "linux" ] && LIBC="-musl"
+
+    # Use bundled static-curl if present, otherwise system curl
+    if [ -x "$PREFIX/libexec/static-curl" ]; then
+        CURL="$PREFIX/libexec/static-curl"
+    else
+        CURL=curl
+    fi
+
+    mkdir -p "$PREFIX/libexec"
+    "$CURL" -fsSL "https://github.com/jdx/mise/releases/download/v${MISE_VERSION}/mise-v${MISE_VERSION}-${OS}-${ARCH}${LIBC}" -o "$MISE_BIN"
+    chmod 755 "$MISE_BIN"
+fi
+
+exec "$MISE_BIN" "$@"
