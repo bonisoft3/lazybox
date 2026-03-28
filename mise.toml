@@ -40,7 +40,8 @@ github.slsa = false
 [tools."http:docker-cli"]
 version = "29.3.0"
 url = 'https://download.docker.com/{{ os(macos="mac") }}/static/stable/{{ arch(x64="x86_64", arm64="aarch64") }}/docker-{{ version }}.tgz'
-bin_path = "docker/docker"
+strip_components = 1
+bin = "docker"
 
 [tools."http:docker-cli".platforms]
 windows-x64 = { url = 'https://download.docker.com/win/static/stable/x86_64/docker-{{ version }}.zip' }

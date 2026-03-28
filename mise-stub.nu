@@ -30,7 +30,8 @@ export def generate_single_stub_from_data [tool_data: record, output_dir: string
     let converted_tool_data = {
         tool_spec: $tool_data.tool_spec,
         version: $tool_data.version,
-        platforms: $tool_data.platforms
+        platforms: $tool_data.platforms,
+        strip_components: ($tool_data | get strip_components? | default null)
     }
 
     generate_single_stub $binary_info $converted_tool_data $output_dir $force $alpine
@@ -41,6 +42,7 @@ def derive_default_binary_name [tool_spec: string] {
         $tool_spec
         | str replace "aqua:" ""
         | str replace "github:" ""
+        | str replace "http:" ""
     )
     $normalized | split row "/" | last
 }
@@ -84,6 +86,19 @@ def should_include_bin_line [tool_spec: string, binary_name: string] {
     if $tool_spec == "github:mikefarah/yq" and $binary_name == "yq" { false } else { true }
 }
 
+# Check if a URL points to an archive file
+def is_archive_url [url: string] {
+    ($url | str ends-with ".tar.gz") or ($url | str ends-with ".tgz") or ($url | str ends-with ".tar.xz") or ($url | str ends-with ".tar.bz2") or ($url | str ends-with ".zip")
+}
+
+# Check if any platform in a tool has archive URLs
+def has_archive_platforms [platforms: record] {
+    $platforms | columns | any {|k|
+        let url = ($platforms | get $k | get url? | default "")
+        is_archive_url $url
+    }
+}
+
 export def write_extra_stub_artifacts [tools_data: list, output_dir: string, alpine: bool] {
     let yq_entry = (
         $tools_data
@@ -99,7 +114,8 @@ export def write_extra_stub_artifacts [tools_data: list, output_dir: string, alp
     let yq_tool_data = {
         tool_spec: $yq_entry.tool_spec,
         version: $yq_entry.version,
-        platforms: $yq_entry.platforms
+        platforms: $yq_entry.platforms,
+        strip_components: ($yq_entry | get strip_components? | default null)
     }
 
     let yq_binary_info = { original_name: "yq", clean_name: "yq" }
@@ -353,6 +369,10 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
     if (should_include_bin_line $tool_data.tool_spec $binary_info.original_name) {
         $content = ($content + $"bin = \"($binary_info.original_name)\"\n")
     }
+    let strip = ($tool_data | get strip_components? | default null)
+    if $strip != null {
+        $content = ($content + $"strip_components = ($strip)\n")
+    }
 
     let platforms = ($tool_data | get platforms? | default {})
     if ($platforms | items {|k, v| {key: $k, value: $v}} | length) > 0 {
@@ -422,6 +442,7 @@ def parse_lockfile_for_tools [lockfile: string, binary_map: record] {
                 continue
             }
             let version = ($entry | get version? | default "")
+            let strip = if (has_archive_platforms $platforms) { 1 } else { null }
             let tool_binaries = (find_tool_binaries $tool_spec $binary_map)
             let fallback_binaries = (build_binary_info_list (fallback_binary_names_for_tool $tool_spec))
             let binaries = (
@@ -435,7 +456,8 @@ def parse_lockfile_for_tools [lockfile: string, binary_map: record] {
                     original_name: $binary_info.original_name,
                     tool_spec: $tool_spec,
                     version: $version,
-                    platforms: $platforms
+                    platforms: $platforms,
+                    strip_components: $strip
                 })
             }
         }

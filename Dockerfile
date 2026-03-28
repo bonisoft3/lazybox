@@ -49,6 +49,7 @@ COPY --chmod=0755 yq-stub.sh $HOME/.local/share/lazybox/stubs/yq
 RUN yq --help  # quick test
 RUN docker compose version  # quick test
 RUN kubectl --help  # quick test
+RUN skaffold version  # quick test
 # clean up after tests
 RUN rm -rf $HOME/.local/share/mise $HOME/.cache $HOME/.local/bin/mise
 

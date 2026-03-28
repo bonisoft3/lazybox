@@ -1,7 +1,8 @@
 # Auto-generated stub for ($binary_info.clean_name)
 
 version = "29.3.0"
-bin = "docker/docker"
+bin = "docker"
+strip_components = 1
 
 # Platform configurations
 [platforms.darwin-amd64]
