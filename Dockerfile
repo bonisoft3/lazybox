@@ -44,6 +44,7 @@ COPY docker-cli-plugin-docker-compose.toml docker-cli-plugin-docker-compose.musl
 COPY --chmod=0755 kubectl /lazybox/bin/kubectl
 COPY kubectl.toml kubectl.musl.toml /lazybox/bin/
 COPY --chmod=0755 yq-stub.sh /lazybox/bin/yq
+COPY --chmod=0755 mise-stub.sh /lazybox/bin/mise
 # Smoke tests — stubs use .lazybox which downloads mise to /lazybox/libexec/
 RUN yq --help
 RUN docker compose version
