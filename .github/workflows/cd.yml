@@ -80,6 +80,8 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           target: nubox
+          build-args: |
+            BASE_IMG=chainguard/wolfi-base@sha256:a5a619c1793039dcf92f02178f37c94bb3d6001403716da59d6092dfe8d9b502
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta-nubox.outputs.tags }}
           labels: ${{ steps.meta-nubox.outputs.labels }}

@@ -6,7 +6,7 @@
 COPY --from=bonisoft3/lazybox /lazybox /usr/local
 ```
 
-That's it. Stubs land in `/usr/local/bin` (already on `PATH`), and a bundled static curl + CA certificates handle bootstrapping on any image — even ones without curl.
+That's it. Stubs land in `/usr/local/bin` (already on `PATH`) and bootstrap themselves on any image.
 
 ## What you get
 
@@ -32,36 +32,64 @@ All paths are resolved explicitly (no `PATH` lookups between components), so the
 
 Lazybox works on:
 
-- Linux (glibc and musl/Alpine) — amd64 and arm64
-- macOS (Intel and Apple Silicon)
-- Windows (amd64)
+- Linux — glibc and musl/Alpine, amd64 and arm64
+- macOS — Intel and Apple Silicon
+- Windows — native, WSL, and Windows containers, amd64
 
-Each stub carries platform-specific download URLs and checksums, with automatic Alpine/musl detection and ARM64 fallback when native musl builds aren't available.
+Each stub carries platform-specific download URLs and checksums, with automatic Alpine/musl detection. When a statically linked build isn't available, the dynamically linked variant is used as fallback.
 
 ## Usage
 
-### Layer onto any image
+### Overlay onto any image (~8 MB)
 
 ```dockerfile
-FROM ubuntu:24.04
+FROM ubuntu
 COPY --from=bonisoft3/lazybox /lazybox /usr/local
 RUN jq --version  # fetched and cached in this layer
 ```
 
-### Minimal layer (host already has curl)
+Includes bundled static curl and CA certificates, so tools bootstrap even on images without curl.
+
+### Stubs-only overlay (~350 KB)
 
 ```dockerfile
-FROM alpine:3.21
-RUN apk add --no-cache curl ca-certificates
+FROM alpine/curl
 COPY --from=bonisoft3/lazybox /lazybox/bin /usr/local/bin
 ```
 
-### Use as a devcontainer base
+When the host already provides SSL-enabled curl, copy just the stubs for a minimal overlay.
+
+### Devcontainer
 
 ```dockerfile
-FROM bonisoft3/lazybox:nubox
-# Nushell as default shell, mise activated, all tools available
+FROM mcr.microsoft.com/devcontainers/base:ubuntu24.04
+COPY --from=bonisoft3/lazybox:nubox /lazybox /home/vscode/.local
+COPY --from=bonisoft3/lazybox:nubox /root/.config/nushell /home/vscode/.config/nushell
+ENV PATH=$PATH:/home/vscode/.local/bin
+CMD [ "/home/vscode/.local/bin/nu", "-l" ]
 ```
+
+The FHS layout works under `$HOME/.local` just like `/usr/local` — add `bin` to `PATH` when the home directory is known at build time. The second COPY brings the Nushell config with mise activation. The pre-built `nubox` target eagerly initializes Nushell and mise. If you need even more customization, check the [Dockerfile](./Dockerfile) for more tricks.
+
+### From scratch
+
+```dockerfile
+FROM scratch
+COPY --from=busybox:1.36.1-musl /bin/busybox /bin/busybox
+RUN ["/bin/busybox", "sh", "-c", "busybox --install /bin"]
+COPY --from=bonisoft3/lazybox /lazybox /usr/local
+RUN jq --version
+```
+
+### Pinned base with system packages
+
+```dockerfile
+FROM opensuse/leap:15.6@sha256:b084d6e29d975ce9123fd52bd201ac020628797f2772e9171ef76f33cc92d591
+COPY --from=bonisoft3/lazybox /lazybox /usr/local
+RUN zypper install -y git-core
+```
+
+Leap provides stable, versioned repositories — packages aren't garbage-collected like in rolling distros. Pin with a multiplatform sha256 for full reproducibility. Use zypper for dependencies not available in mise, and lazybox for everything else.
 
 ### Run standalone
 
@@ -93,5 +121,5 @@ docker build --target lazybox -t bonisoft3/lazybox .
 ```
 
 Available targets:
-- **lazybox** — the portable toolbox layer (default, based on Alpine)
-- **nubox** — extends lazybox with Nushell as default shell and mise activated
+- **lazybox** — the portable toolbox overlay (default, based on Alpine)
+- **nubox** — extends lazybox with Nushell and mise activated (based on wolfi-base for glibc compatibility)

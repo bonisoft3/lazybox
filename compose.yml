@@ -2,6 +2,8 @@ services:
   launch:
     build:
       target: nubox
+      args:
+        BASE_IMG: chainguard/wolfi-base@sha256:a5a619c1793039dcf92f02178f37c94bb3d6001403716da59d6092dfe8d9b502
     command: nu -l
 
   integrate:
@@ -11,21 +13,73 @@ services:
         BASE_IMG: mcr.microsoft.com/devcontainers/base:ubuntu24.04@sha256:4bcb1b466771b1ba1ea110e2a27daea2f6093f9527fb75ee59703ec89b5561cb
     command: nu -l -c "mise --version; jq --version; yq --version; bat --version; rg --version; echo 'All tools OK'"
 
+  # --- README examples (inline Dockerfiles matching the docs) ---
+
+  readme-overlay:
+    build:
+      dockerfile_inline: |
+        FROM ubuntu@sha256:186072bba1b2f436cbb91ef2567abca677337cfc786c86e107d25b7072feef0c
+        COPY --from=lazybox /lazybox /usr/local
+        RUN jq --version
+      additional_contexts:
+        lazybox: service:lazybox
+
+  readme-stubs-only:
+    build:
+      dockerfile_inline: |
+        FROM alpine/curl@sha256:5bd4985f3daa6d1ca87619802190afc24c0ccd410b1f123de5afc8e891b5fc71
+        COPY --from=lazybox /lazybox/bin /usr/local/bin
+      additional_contexts:
+        lazybox: service:lazybox
+
+  readme-scratch:
+    build:
+      dockerfile_inline: |
+        FROM scratch
+        COPY --from=busybox:1.36.1-musl@sha256:3c6ae8008e2c2eedd141725c30b20d9c36b026eb796688f88205845ef17aa213 /bin/busybox /bin/busybox
+        RUN ["/bin/busybox", "sh", "-c", "busybox --install /bin"]
+        COPY --from=lazybox /lazybox /usr/local
+        RUN jq --version
+      additional_contexts:
+        lazybox: service:lazybox
+
+  readme-devcontainer:
+    build:
+      dockerfile_inline: |
+        FROM mcr.microsoft.com/devcontainers/base:ubuntu24.04@sha256:4bcb1b466771b1ba1ea110e2a27daea2f6093f9527fb75ee59703ec89b5561cb
+        COPY --from=nubox /lazybox /home/vscode/.local
+        COPY --from=nubox /root/.config/nushell /home/vscode/.config/nushell
+        ENV PATH=$PATH:/home/vscode/.local/bin
+        CMD [ "/home/vscode/.local/bin/nu", "-l" ]
+      additional_contexts:
+        nubox: service:launch
+
+  readme-leap:
+    build:
+      dockerfile_inline: |
+        FROM opensuse/leap:15.6@sha256:b084d6e29d975ce9123fd52bd201ac020628797f2772e9171ef76f33cc92d591
+        COPY --from=lazybox /lazybox /usr/local
+        RUN zypper install -y git-core
+      additional_contexts:
+        lazybox: service:lazybox
+
+  # --- Base image variants ---
+
   lazybox:
     build:
       target: lazybox
-
-  lazybox-alpine:
-    build:
-      target: lazybox
-      args:
-        BASE_IMG: alpine/curl@sha256:5bd4985f3daa6d1ca87619802190afc24c0ccd410b1f123de5afc8e891b5fc71
 
   lazybox-wolfi:
     build:
       target: lazybox
       args:
         BASE_IMG: chainguard/wolfi-base@sha256:a5a619c1793039dcf92f02178f37c94bb3d6001403716da59d6092dfe8d9b502
+
+  lazybox-leap:
+    build:
+      target: lazybox
+      args:
+        BASE_IMG: opensuse/leap:15.6@sha256:b084d6e29d975ce9123fd52bd201ac020628797f2772e9171ef76f33cc92d591
 
   bbcurl:
     build:
