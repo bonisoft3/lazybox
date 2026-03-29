@@ -6,6 +6,6 @@ say:
   build:
     do: "docker build --target lazybox -t bonisoft3/lazybox ."
   test:
-    do: "docker build --target lazybox-builder ."
+    do: "nu mise-lazybox.test.nu"
   release:
     do: "docker build --target lazybox -t bonisoft3/lazybox . && docker build --target nubox -t bonisoft3/lazybox:nubox ."

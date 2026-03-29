@@ -10,7 +10,7 @@ CERT="$PREFIX/share/ca-certificates/ca-certificates.crt"
 
 # Find mise: check known locations before downloading
 MISE_BIN=""
-for candidate in "$PREFIX/libexec/mise" "$PREFIX/bin/mise"; do
+for candidate in "$PREFIX/libexec/mise"; do
     if [ -x "$candidate" ]; then
         MISE_BIN="$candidate"
         break
