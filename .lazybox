@@ -36,4 +36,12 @@ if [ -z "$MISE_BIN" ]; then
     chmod 755 "$MISE_BIN"
 fi
 
+# Disable attestation checks to avoid GitHub API rate limiting
+export MISE_AQUA__GITHUB_ATTESTATIONS=false
+export MISE_AQUA__COSIGN=false
+export MISE_AQUA__SLSA=false
+export MISE_AQUA__MINISIGN=false
+export MISE_GITHUB__GITHUB_ATTESTATIONS=false
+export MISE_GITHUB__SLSA=false
+
 exec "$MISE_BIN" "$@"

@@ -28,4 +28,3 @@ checksum = "sha256:f508d57e82e661fc9daa4fc8bc5dc69e9625743366fe0d30c934deff55ed2
 url = "https://github.com/docker/buildx/releases/download/v0.32.1/buildx-v0.32.1.windows-amd64.exe"
 checksum = "sha256:47d76e47acf3c7611dd594c4b0909fec680ae6406b6fa775f6077b195837e2b9"
 bin = "docker-cli-plugin-docker-buildx.exe"
-

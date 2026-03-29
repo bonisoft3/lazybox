@@ -35,6 +35,8 @@ github.slsa = false
 "github:mikefarah/yq" = "4.52.4"
 "github:dbohdan/recur" = "3.2.0"
 "github:lvillis/tcping-rs" = "1.2.24"
+"github:chmln/sd" = "v1.1.0"
+"github:FiloSottile/age" = "v1.3.1"
 
 # http: backend — URL templates work for macOS/Linux; Windows overrides below.
 [tools."http:docker-cli"]
@@ -59,3 +61,12 @@ url = 'https://dl.k8s.io/v{{ version }}/bin/{{ os(macos="darwin") }}/{{ arch(x64
 
 [tools."http:kubectl".platforms]
 windows-x64 = { url = 'https://dl.k8s.io/v{{ version }}/bin/windows/amd64/kubectl.exe' }
+
+[tools."http:helm"]
+version = "4.1.3"
+url = 'https://get.helm.sh/helm-v{{ version }}-{{ os(macos="darwin") }}-{{ arch(x64="amd64") }}.tar.gz'
+strip_components = 1
+bin = "helm"
+
+[tools."http:helm".platforms]
+windows-x64 = { url = 'https://get.helm.sh/helm-v{{ version }}-windows-amd64.zip' }

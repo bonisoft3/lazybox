@@ -32,4 +32,3 @@ bin = "kubectl.exe"
 [platforms.windows-x64]
 url = "https://dl.k8s.io/v1.35.2/bin/windows/amd64/kubectl.exe"
 bin = "kubectl.exe"
-

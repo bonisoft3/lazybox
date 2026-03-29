@@ -1,5 +1,6 @@
 # Auto-generated stub for ($binary_info.clean_name)
 
+tool = "http:kubectl"
 version = "1.35.2"
 bin = "kubectl"
 
@@ -19,17 +20,7 @@ url = "https://dl.k8s.io/v1.35.2/bin/linux/arm64/kubectl"
 [platforms.linux-x64]
 url = "https://dl.k8s.io/v1.35.2/bin/linux/amd64/kubectl"
 
-[platforms.macos-arm64]
-url = "https://dl.k8s.io/v1.35.2/bin/darwin/arm64/kubectl"
-
-[platforms.macos-x64]
-url = "https://dl.k8s.io/v1.35.2/bin/darwin/amd64/kubectl"
-
 [platforms.windows-amd64]
-url = "https://dl.k8s.io/v1.35.2/bin/windows/amd64/kubectl"
-bin = "kubectl.exe"
-
-[platforms.windows-x64]
 url = "https://dl.k8s.io/v1.35.2/bin/windows/amd64/kubectl.exe"
 bin = "kubectl.exe"
 

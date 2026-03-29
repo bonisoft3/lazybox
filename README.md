@@ -10,10 +10,10 @@ That's it. Stubs land in `/usr/local/bin` (already on `PATH`) and bootstrap them
 
 ## What you get
 
-**Containers & K8s**: docker, compose, buildx, kubectl, kind, skaffold
+**Containers & K8s**: docker, compose, buildx, kubectl, kind, skaffold, helm
 **Shell & Scripting**: nu (Nushell), just, task, cue, jq, yq, buf
-**Search & Files**: rg (ripgrep), fd, fzf, bat, lsd, dua, zoxide
-**Dev Tools**: uv, uvx, micro, hyperfine, xh, sops, recur, tcping
+**Search & Files**: rg (ripgrep), fd, fzf, bat, lsd, dua, zoxide, sd
+**Dev Tools**: uv, uvx, micro, hyperfine, xh, sops, recur, tcping, age
 
 ## How it works
 
