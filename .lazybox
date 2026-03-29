@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/sh
 # lazybox bootstrap — finds or downloads mise, then delegates.
 # All paths are resolved explicitly (no PATH lookups) to avoid shim loops.
 set -eu
