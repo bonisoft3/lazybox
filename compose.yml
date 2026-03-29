@@ -12,6 +12,17 @@ services:
       args:
         BASE_IMG: mcr.microsoft.com/devcontainers/base:ubuntu24.04@sha256:4bcb1b466771b1ba1ea110e2a27daea2f6093f9527fb75ee59703ec89b5561cb
     command: nu -l -c "mise --version; jq --version; yq --version; bat --version; rg --version; echo 'All tools OK'"
+    depends_on:
+      readme-overlay:
+        condition: service_completed_successfully
+      readme-stubs-only:
+        condition: service_completed_successfully
+      readme-scratch:
+        condition: service_completed_successfully
+      readme-devcontainer:
+        condition: service_completed_successfully
+      readme-leap:
+        condition: service_completed_successfully
 
   # --- README examples (inline Dockerfiles matching the docs) ---
 
@@ -23,6 +34,7 @@ services:
         RUN jq --version
       additional_contexts:
         lazybox: service:lazybox
+    command: echo OK
 
   readme-stubs-only:
     build:
@@ -31,6 +43,7 @@ services:
         COPY --from=lazybox /lazybox/bin /usr/local/bin
       additional_contexts:
         lazybox: service:lazybox
+    command: echo OK
 
   readme-scratch:
     build:
@@ -42,6 +55,7 @@ services:
         RUN jq --version
       additional_contexts:
         lazybox: service:lazybox
+    command: echo OK
 
   readme-devcontainer:
     build:
@@ -53,6 +67,7 @@ services:
         CMD [ "/home/vscode/.local/bin/nu", "-l" ]
       additional_contexts:
         nubox: service:launch
+    command: echo OK
 
   readme-leap:
     build:
@@ -62,6 +77,7 @@ services:
         RUN zypper install -y git-core
       additional_contexts:
         lazybox: service:lazybox
+    command: echo OK
 
   # --- Base image variants ---
 
