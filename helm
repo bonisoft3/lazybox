@@ -1,6 +1,6 @@
 #!/bin/sh
 # Get the directory where this script lives
-DIR="$(dirname "$(readlink -f "$0")")"
+DIR="$(dirname "$(readlink -f "$0")")" 
 
 # Run mise tool-stub with trusted config
 "$DIR/.lazybox" trust -y -a -q .

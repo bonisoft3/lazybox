@@ -19,7 +19,7 @@ done
 
 if [ -z "$MISE_BIN" ]; then
     MISE_BIN="$PREFIX/libexec/mise"
-    MISE_VERSION=2026.3.5
+    MISE_VERSION=2026.3.17
     ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
     OS=$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/darwin/macos/')
     LIBC=; [ "$OS" = "linux" ] && LIBC="-musl"

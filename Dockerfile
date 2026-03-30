@@ -24,7 +24,7 @@ RUN mv /tmp/ca-certificates.crt /lazybox/share/ca-certificates/
 RUN printf '#!/bin/sh\nexport SSL_CERT_FILE=/lazybox/share/ca-certificates/ca-certificates.crt\nexec /lazybox/libexec/static-curl "$@"\n' > /build/shims/curl && chmod +x /build/shims/curl
 
 FROM bbcurl AS lazybox-builder
-ENV MISE_VERSION=2026.3.5
+ENV MISE_VERSION=2026.3.17
 # Build-time mise shim
 COPY --chmod=0755 lazy-mise.sh /build/shims/mise
 # Generate stubs
@@ -38,11 +38,11 @@ RUN mise exec -- nu mise-lazybox.nu -f -o /lazybox/bin/
 COPY --chmod=0755 .lazybox /lazybox/bin/.lazybox
 # Override docker stubs — mise-lazybox.nu generates incorrect bin paths for http: tools
 COPY --chmod=0755 docker-stub.sh /lazybox/bin/docker
-COPY docker.toml docker.musl.toml /lazybox/bin/
+COPY docker.toml /lazybox/bin/
 COPY --chmod=0755 docker-cli-plugin-docker-compose docker-cli-plugin-docker-buildx /lazybox/bin/
-COPY docker-cli-plugin-docker-compose.toml docker-cli-plugin-docker-compose.musl.toml docker-cli-plugin-docker-buildx.toml docker-cli-plugin-docker-buildx.musl.toml /lazybox/bin/
+COPY docker-cli-plugin-docker-compose.toml docker-cli-plugin-docker-buildx.toml /lazybox/bin/
 COPY --chmod=0755 kubectl /lazybox/bin/kubectl
-COPY kubectl.toml kubectl.musl.toml /lazybox/bin/
+COPY kubectl.toml /lazybox/bin/
 COPY --chmod=0755 yq-stub.sh /lazybox/bin/yq
 COPY --chmod=0755 mise-stub.sh /lazybox/bin/mise
 # Smoke tests — stubs use .lazybox which downloads mise to /lazybox/libexec/

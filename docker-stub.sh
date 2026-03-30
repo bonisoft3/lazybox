@@ -9,11 +9,5 @@ fi
 if [ ! -x $HOME/.docker/cli-plugins/docker-buildx ]; then
  ln -sf $DIR/docker-cli-plugin-docker-buildx $HOME/.docker/cli-plugins/docker-buildx
 fi
-# Check for Alpine and prefer musl variant if available
-if [ -f /etc/alpine-release ] && [ -f "$DIR/docker.musl.toml" ]; then
-    "$DIR/.lazybox" trust -y -a -q .
-    MISE_LOCKED=0 exec "$DIR/.lazybox" tool-stub "$DIR/docker.musl.toml" "$@"
-else
-    "$DIR/.lazybox" trust -y -a -q .
-    MISE_LOCKED=0 exec "$DIR/.lazybox" tool-stub "$DIR/docker.toml" "$@"
-fi
+"$DIR/.lazybox" trust -y -a -q .
+MISE_LOCKED=0 exec "$DIR/.lazybox" tool-stub "$DIR/docker.toml" "$@"

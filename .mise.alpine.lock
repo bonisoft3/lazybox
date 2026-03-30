@@ -22,6 +22,34 @@ url = "https://github.com/Byron/dua-cli/releases/download/v2.34.0/dua-v2.34.0-x8
 [tools."aqua:Byron/dua-cli"."platforms.windows-amd64"]
 url = "https://github.com/Byron/dua-cli/releases/download/v2.34.0/dua-v2.34.0-x86_64-pc-windows-msvc.zip"
 
+[[tools."http:helm"]]
+version = "4.1.3"
+backend = "http:helm"
+
+[tools."http:helm"."platforms.darwin-amd64"]
+url = "https://get.helm.sh/helm-v4.1.3-darwin-amd64.tar.gz"
+
+[tools."http:helm"."platforms.linux-amd64"]
+url = "https://get.helm.sh/helm-v4.1.3-linux-amd64.tar.gz"
+
+[tools."http:helm"."platforms.linux-arm64"]
+url = "https://get.helm.sh/helm-v4.1.3-linux-arm64.tar.gz"
+
+[tools."http:helm"."platforms.linux-x64"]
+url = "https://get.helm.sh/helm-v4.1.3-linux-amd64.tar.gz"
+
+[tools."http:helm"."platforms.linux-x64-musl"]
+url = "https://get.helm.sh/helm-v4.1.3-linux-amd64.tar.gz"
+
+[tools."http:helm"."platforms.linux-arm64-musl"]
+url = "https://get.helm.sh/helm-v4.1.3-linux-arm64.tar.gz"
+
+[tools."http:helm"."platforms.macos-arm64"]
+url = "https://get.helm.sh/helm-v4.1.3-darwin-arm64.tar.gz"
+
+[tools."http:helm"."platforms.windows-x64"]
+url = "https://get.helm.sh/helm-v4.1.3-windows-amd64.zip"
+
 [[tools."github:ajeetdsouza/zoxide"]]
 version = "0.9.9"
 backend = "github:ajeetdsouza/zoxide"
@@ -648,6 +676,102 @@ url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205764
 [tools."github:sharkdp/hyperfine"."platforms.windows-amd64"]
 url = "https://github.com/sharkdp/hyperfine/releases/download/v1.20.0/hyperfine-v1.20.0-x86_64-pc-windows-msvc.zip"
 url_api = "https://api.github.com/repos/sharkdp/hyperfine/releases/assets/205764932"
+
+[[tools."github:chmln/sd"]]
+version = "1.1.0"
+backend = "github:chmln/sd"
+
+[tools."github:chmln/sd"."platforms.darwin-amd64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325430"
+
+[tools."github:chmln/sd"."platforms.darwin-arm64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325451"
+
+[tools."github:chmln/sd"."platforms.linux-amd64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325321"
+
+[tools."github:chmln/sd"."platforms.linux-arm64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325535"
+
+[tools."github:chmln/sd"."platforms.linux-x64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325321"
+
+[tools."github:chmln/sd"."platforms.macos-arm64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325451"
+
+[tools."github:chmln/sd"."platforms.windows-amd64"]
+url = "https://github.com/chmln/sd/releases/download/v1.1.0/sd-v1.1.0-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/chmln/sd/releases/assets/362325573"
+
+[[tools."github:FiloSottile/age"]]
+version = "1.3.1"
+backend = "github:FiloSottile/age"
+
+[tools."github:FiloSottile/age"."platforms.darwin-amd64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-darwin-amd64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/343881260"
+
+[tools."github:FiloSottile/age"."platforms.darwin-arm64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752669"
+
+[tools."github:FiloSottile/age"."platforms.linux-amd64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752671"
+
+[tools."github:FiloSottile/age"."platforms.linux-arm64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752668"
+
+[tools."github:FiloSottile/age"."platforms.linux-x64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-linux-amd64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752671"
+
+[tools."github:FiloSottile/age"."platforms.macos-arm64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-darwin-arm64.tar.gz"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752669"
+
+[tools."github:FiloSottile/age"."platforms.windows-amd64"]
+url = "https://github.com/FiloSottile/age/releases/download/v1.3.1/age-v1.3.1-windows-amd64.zip"
+url_api = "https://api.github.com/repos/FiloSottile/age/releases/assets/333752673"
+
+[[tools."github:sharkdp/hexyl"]]
+version = "0.17.0"
+backend = "github:sharkdp/hexyl"
+
+[tools."github:sharkdp/hexyl"."platforms.darwin-amd64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844706"
+
+[tools."github:sharkdp/hexyl"."platforms.darwin-arm64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844709"
+
+[tools."github:sharkdp/hexyl"."platforms.linux-amd64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844488"
+
+[tools."github:sharkdp/hexyl"."platforms.linux-arm64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844535"
+
+[tools."github:sharkdp/hexyl"."platforms.linux-x64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844488"
+
+[tools."github:sharkdp/hexyl"."platforms.macos-arm64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844709"
+
+[tools."github:sharkdp/hexyl"."platforms.windows-amd64"]
+url = "https://github.com/sharkdp/hexyl/releases/download/v0.17.0/hexyl-v0.17.0-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/sharkdp/hexyl/releases/assets/355844647"
 
 [[tools."http:docker-cli"]]
 version = "29.3.0"

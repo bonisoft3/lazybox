@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 # Build-time mise bootstrap — downloads mise for the build environment.
 # Uses static-curl and CA certs from the /lazybox output tree.
-MISE_VERSION=2026.3.5
+MISE_VERSION=2026.3.17
 MISE_BIN=/build/bin/mise
 if [ ! -x "$MISE_BIN" ]; then
 	ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
