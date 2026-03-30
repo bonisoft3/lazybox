@@ -30,6 +30,8 @@ ENV MISE_VERSION=2026.3.17
 # lazy-mise resolves static-curl relative to its own prefix ($PREFIX/libexec/static-curl);
 # bbcurl placed it at /lazybox/libexec, so symlink it into the build prefix too.
 RUN ln -s /lazybox/libexec/static-curl /build/libexec/static-curl
+# lazy-mise looks for certs at $PREFIX/share/ca-certificates/ — symlink from lazybox tree
+RUN mkdir -p /build/share && ln -s /lazybox/share/ca-certificates /build/share/ca-certificates
 # curl shim for any direct curl invocations by mise during install
 RUN printf '#!/bin/sh\nexport SSL_CERT_FILE=/lazybox/share/ca-certificates/ca-certificates.crt\nexec /lazybox/libexec/static-curl "$@"\n' > /build/shims/curl && chmod +x /build/shims/curl
 COPY --chmod=0755 lazy-mise /build/libexec/lazy-mise
