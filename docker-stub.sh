@@ -9,5 +9,5 @@ fi
 if [ ! -x $HOME/.docker/cli-plugins/docker-buildx ]; then
  ln -sf $DIR/docker-cli-plugin-docker-buildx $HOME/.docker/cli-plugins/docker-buildx
 fi
-"$DIR/.lazybox" trust -y -a -q .
-MISE_LOCKED=0 exec "$DIR/.lazybox" tool-stub "$DIR/docker.toml" "$@"
+"$DIR/../libexec/lazy-mise" trust -y -a -q .
+MISE_LOCKED=0 exec "$DIR/../libexec/lazy-mise" tool-stub "$DIR/docker.toml" "$@"

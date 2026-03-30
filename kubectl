@@ -3,5 +3,5 @@
 DIR="$(dirname "$(readlink -f "$0")")" 
 
 # Run mise tool-stub with trusted config
-"$DIR/.lazybox" trust -y -a -q .
-MISE_LOCKED=0 exec "$DIR/.lazybox" tool-stub "$DIR/kubectl.toml" "$@"
+"$DIR/../libexec/lazy-mise" trust -y -a -q .
+MISE_LOCKED=0 exec "$DIR/../libexec/lazy-mise" tool-stub "$DIR/kubectl.toml" "$@"

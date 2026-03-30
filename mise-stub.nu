@@ -305,16 +305,16 @@ def build_wrapper_content [tool_name: string, has_alpine_variant: bool] {
     if $has_alpine_variant {
         $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
         $content = ($content + $"if [ -f /etc/alpine-release ] && [ -f \"\$DIR/($tool_name).musl.toml\" ]; then\n")
-        $content = ($content + "    \"\$DIR/.lazybox\" trust -y -a -q .\n")
-        $content = ($content + $"    MISE_LOCKED=0 exec \"\$DIR/.lazybox\" tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
+        $content = ($content + "    \"\$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
+        $content = ($content + $"    MISE_LOCKED=0 exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
         $content = ($content + "else\n")
-        $content = ($content + "    \"\$DIR/.lazybox\" trust -y -a -q .\n")
-        $content = ($content + $"    MISE_LOCKED=0 exec \"\$DIR/.lazybox\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
+        $content = ($content + "    \"\$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
+        $content = ($content + $"    MISE_LOCKED=0 exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
         $content = ($content + "fi\n")
     } else {
         $content = ($content + "# Run mise tool-stub with trusted config\n")
-        $content = ($content + "\"\$DIR/.lazybox\" trust -y -a -q .\n")
-        $content = ($content + $"MISE_LOCKED=0 exec \"\$DIR/.lazybox\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
+        $content = ($content + "\"\$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
+        $content = ($content + $"MISE_LOCKED=0 exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
     }
 
     $content
@@ -334,11 +334,11 @@ def build_docker_wrapper_content [] {
     $content = ($content + "fi\n")
     $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
     $content = ($content + "if [ -f /etc/alpine-release ] && [ -f \"$DIR/docker.musl.toml\" ]; then\n")
-    $content = ($content + "    \"$DIR/.lazybox\" trust -y -a -q .\n")
-    $content = ($content + "    MISE_LOCKED=0 exec \"$DIR/.lazybox\" tool-stub \"$DIR/docker.musl.toml\" \"$@\"\n")
+    $content = ($content + "    \"$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
+    $content = ($content + "    MISE_LOCKED=0 exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/docker.musl.toml\" \"$@\"\n")
     $content = ($content + "else\n")
-    $content = ($content + "    \"$DIR/.lazybox\" trust -y -a -q .\n")
-    $content = ($content + "    MISE_LOCKED=0 exec \"$DIR/.lazybox\" tool-stub \"$DIR/docker.toml\" \"$@\"\n")
+    $content = ($content + "    \"$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
+    $content = ($content + "    MISE_LOCKED=0 exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/docker.toml\" \"$@\"\n")
     $content = ($content + "fi\n")
     $content
 }
@@ -351,8 +351,8 @@ def build_yq_wrapper_content [] {
     $content = ($content + "bin=yq_$(uname -s | tr A-Z a-z)_$(uname -m | sed -e 's/x86_64/amd64/; s/aarch64/arm64/')\n")
     $content = ($content + "cp $DIR/yq.toml $DIR/$bin\n")
     $content = ($content + "# Run mise tool-stub with trusted config\n")
-    $content = ($content + "\"$DIR/.lazybox\" trust -y -a -q .\n")
-    $content = ($content + "MISE_LOCKED=0 exec \"$DIR/.lazybox\" tool-stub \"$DIR/$bin\" \"$@\"\n")
+    $content = ($content + "\"$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
+    $content = ($content + "MISE_LOCKED=0 exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/$bin\" \"$@\"\n")
     $content
 }
 

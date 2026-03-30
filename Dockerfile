@@ -25,8 +25,9 @@ RUN printf '#!/bin/sh\nexport SSL_CERT_FILE=/lazybox/share/ca-certificates/ca-ce
 
 FROM bbcurl AS lazybox-builder
 ENV MISE_VERSION=2026.3.17
-# Build-time mise shim
-COPY --chmod=0755 lazy-mise.sh /build/shims/mise
+# Build-time mise bootstrap (lives in libexec/, works at both build and run time)
+COPY --chmod=0755 lazy-mise /lazybox/libexec/lazy-mise
+RUN ln -s /lazybox/libexec/lazy-mise /build/shims/mise
 # Generate stubs
 COPY --chmod=0755 *.nu .
 COPY mise.toml .mise.alpine.lock ./
@@ -34,8 +35,6 @@ RUN cp .mise.alpine.lock mise.lock
 RUN mise -q trust
 RUN mise install
 RUN mise exec -- nu mise-lazybox.nu -f -o /lazybox/bin/
-# Place .lazybox bootstrap in output bin/
-COPY --chmod=0755 .lazybox /lazybox/bin/.lazybox
 # Override docker stubs — mise-lazybox.nu generates incorrect bin paths for http: tools
 COPY --chmod=0755 docker-stub.sh /lazybox/bin/docker
 COPY docker.toml /lazybox/bin/
@@ -45,7 +44,7 @@ COPY --chmod=0755 kubectl /lazybox/bin/kubectl
 COPY kubectl.toml /lazybox/bin/
 COPY --chmod=0755 yq-stub.sh /lazybox/bin/yq
 COPY --chmod=0755 mise-stub.sh /lazybox/bin/mise
-# Smoke tests — stubs use .lazybox which downloads mise to /lazybox/libexec/
+# Smoke tests — stubs use lazy-mise which downloads mise to /lazybox/libexec/
 RUN yq --help
 RUN docker compose version
 RUN kubectl --help

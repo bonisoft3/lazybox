@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$(dirname "$(readlink -f "$0")")/.lazybox" "$@"
+exec "$(dirname "$(readlink -f "$0")")/../libexec/lazy-mise" "$@"

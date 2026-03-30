@@ -1,5 +1,6 @@
 #!/bin/sh
 # lazybox bootstrap — finds or downloads mise, then delegates.
+# Works in both build-time (docker build) and runtime contexts.
 # All paths are resolved explicitly (no PATH lookups) to avoid shim loops.
 set -eu
 PREFIX="$(dirname "$(realpath "$0")")/.."
@@ -8,7 +9,7 @@ PREFIX="$(dirname "$(realpath "$0")")/.."
 CERT="$PREFIX/share/ca-certificates/ca-certificates.crt"
 [ -f "$CERT" ] && export SSL_CERT_FILE="${SSL_CERT_FILE:-$CERT}"
 
-# Find mise: check known locations before downloading
+# Find mise: check libexec only (NOT bin/mise — that's the stub wrapper and would loop)
 MISE_BIN=""
 for candidate in "$PREFIX/libexec/mise"; do
     if [ -x "$candidate" ]; then
