@@ -36,6 +36,9 @@ RUN busybox --install /build/bin/
 RUN mkdir -p /build/shims /build/libexec /usr/bin /bin
 RUN ln -s /build/bin/sh /usr/bin/env
 RUN ln -s /build/bin/sh /bin/sh
+# Signal to mise that this is a musl environment so it downloads
+# musl-compatible (Alpine) binaries instead of glibc ones.
+RUN mkdir -p /etc && touch /etc/alpine-release
 SHELL [ "/bin/sh", "-c" ]
 
 FROM build-base AS stub-gen
