@@ -30,8 +30,7 @@ COPY --chmod=0755 lazy-mise /lazybox/libexec/lazy-mise
 RUN ln -s /lazybox/libexec/lazy-mise /build/shims/mise
 # Generate stubs
 COPY --chmod=0755 *.nu .
-COPY mise.toml .mise.alpine.lock ./
-RUN cp .mise.alpine.lock mise.lock
+COPY mise.toml mise.lock ./
 RUN mise -q trust
 RUN mise install
 RUN mise exec -- nu mise-lazybox.nu -f -o /lazybox/bin/
