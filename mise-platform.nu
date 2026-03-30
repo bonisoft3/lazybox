@@ -168,10 +168,6 @@ export def get_aqua_platform_preference [tool_name: string, platform: string] {
     "musl"
 }
 
-# Detect if running on Alpine Linux
-export def is_alpine [] {
-    ("/etc/alpine-release" | path exists)
-}
 
 # Get Alpine-specific platform preference
 export def get_alpine_platform_preference [tool_data: record] {

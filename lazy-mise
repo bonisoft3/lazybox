@@ -37,6 +37,15 @@ if [ -z "$MISE_BIN" ]; then
     chmod 755 "$MISE_BIN"
 fi
 
+
+# On Linux, ensure mise detects musl when glibc is absent (scratch, busybox, Alpine)
+if [ "$(uname -s)" = "Linux" ] && [ ! -f /etc/alpine-release ]; then
+    if [ ! -f /lib64/ld-linux-x86-64.so.2 ] && [ ! -f /lib/ld-linux-aarch64.so.1 ] && [ ! -f /lib/ld-linux-armhf.so.3 ]; then
+        mkdir -p /etc 2>/dev/null || true
+        touch /etc/alpine-release 2>/dev/null || true
+    fi
+fi
+
 # Disable attestation checks to avoid GitHub API rate limiting
 export MISE_AQUA__GITHUB_ATTESTATIONS=false
 export MISE_AQUA__COSIGN=false

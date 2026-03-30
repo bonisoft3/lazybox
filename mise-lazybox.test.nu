@@ -423,11 +423,6 @@ def test_integration [original_dir: string] {
         assert (($test_platform | length) > 0)
         print "   ✓ mise-platform.nu imported and working"
 
-        # Test that Alpine detection works
-        let is_alpine_result = (is_alpine)
-        assert ($is_alpine_result == true or $is_alpine_result == false)
-        print "   ✓ Alpine detection function working"
-
         print "   ✅ Integration test completed (all modules imported successfully)"
 
     } catch {|e|
