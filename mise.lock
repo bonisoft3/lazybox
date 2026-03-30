@@ -45,7 +45,7 @@ backend = "github:ajeetdsouza/zoxide"
 [[tools."github:astral-sh/uv"]]
 version = "0.11.2"
 backend = "github:astral-sh/uv"
-"platforms.linux-arm64" = { checksum = "sha256:04792cac761c4a6ba78267f36f2af541b7f92196d42ac55d21d3ff6b0f5ab6a5", url = "https://github.com/astral-sh/uv/releases/download/0.11.2/uv-aarch64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/382400075"}
+"platforms.linux-arm64" = { checksum = "sha256:275d91dd1f1955136591e7ec5e1fa21e84d0d37ead7da7c35c3683df748d9855", url = "https://github.com/astral-sh/uv/releases/download/0.11.2/uv-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/382400078"}
 "platforms.linux-arm64-musl" = { checksum = "sha256:275d91dd1f1955136591e7ec5e1fa21e84d0d37ead7da7c35c3683df748d9855", url = "https://github.com/astral-sh/uv/releases/download/0.11.2/uv-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/382400078"}
 "platforms.linux-x64" = { checksum = "sha256:7ac2ca0449c8d68dae9b99e635cd3bc9b22a4cb1de64b7c43716398447d42981", url = "https://github.com/astral-sh/uv/releases/download/0.11.2/uv-x86_64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/382400130"}
 "platforms.linux-x64-musl" = { checksum = "sha256:4700d9fc75734247587deb3e25dd2c6c24f4ac69e8fe91d6acad4a6013115c06", url = "https://github.com/astral-sh/uv/releases/download/0.11.2/uv-x86_64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/astral-sh/uv/releases/assets/382400132"}
@@ -199,7 +199,7 @@ backend = "github:kubernetes-sigs/kind"
 [[tools."github:lsd-rs/lsd"]]
 version = "1.2.0"
 backend = "github:lsd-rs/lsd"
-"platforms.linux-arm64" = { checksum = "sha256:48c069cf73a8ed0851f366afeac86e3a9b7db416133f45d033d31d123f819f26", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-aarch64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/303319672"}
+"platforms.linux-arm64" = { checksum = "sha256:642ecb1a763b9f790a99c83a1445c117a6813ed4edb5d498d4420423c6353eb8", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/303319949"}
 "platforms.linux-arm64-musl" = { checksum = "sha256:642ecb1a763b9f790a99c83a1445c117a6813ed4edb5d498d4420423c6353eb8", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/303319949"}
 "platforms.linux-x64" = { checksum = "sha256:57d3b5859254adcfb8374ce98159cca97a14959997d2ae1176d2cff59556d829", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-x86_64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/303319829"}
 "platforms.linux-x64-musl" = { checksum = "sha256:77849da1210336534258551a581401ba19ae6b8d7b66a2a1feff148ad41e3814", url = "https://github.com/lsd-rs/lsd/releases/download/v1.2.0/lsd-v1.2.0-x86_64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/lsd-rs/lsd/releases/assets/303319745"}
@@ -242,7 +242,7 @@ backend = "github:mikefarah/yq"
 [[tools."github:nushell/nushell"]]
 version = "0.110.0"
 backend = "github:nushell/nushell"
-"platforms.linux-arm64" = { checksum = "sha256:8c6d9655ecce9cea7f53d190d12e351df687614324201f4cf717310abf87d946", url = "https://github.com/nushell/nushell/releases/download/0.110.0/nu-0.110.0-aarch64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/342124505"}
+"platforms.linux-arm64" = { checksum = "sha256:596ce2cc836eb5ca9f710c69995dd9bfac26135cf0cd67ff13ce98e528e7f9f4", url = "https://github.com/nushell/nushell/releases/download/0.110.0/nu-0.110.0-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/342123418"}
 "platforms.linux-arm64-musl" = { checksum = "sha256:596ce2cc836eb5ca9f710c69995dd9bfac26135cf0cd67ff13ce98e528e7f9f4", url = "https://github.com/nushell/nushell/releases/download/0.110.0/nu-0.110.0-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/342123418"}
 "platforms.linux-x64" = { checksum = "sha256:d68c38d408b04c7d957930d4de15b3ded1520cf322bc6897ef85666955f41889", url = "https://github.com/nushell/nushell/releases/download/0.110.0/nu-0.110.0-x86_64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/342122557"}
 "platforms.linux-x64-musl" = { checksum = "sha256:82b0f24646ad1dc5f1a2f2112b8a25178fb62e085c26b1a00eb2e0be091ce055", url = "https://github.com/nushell/nushell/releases/download/0.110.0/nu-0.110.0-x86_64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/nushell/nushell/releases/assets/342122564"}
@@ -253,7 +253,7 @@ backend = "github:nushell/nushell"
 [[tools."github:sharkdp/bat"]]
 version = "0.26.1"
 backend = "github:sharkdp/bat"
-"platforms.linux-arm64" = { checksum = "sha256:422eb73e11c854fddd99f5ca8461c2f1d6e6dce0a2a8c3d5daade5ffcb6564aa", url = "https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-aarch64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/sharkdp/bat/releases/assets/323548647"}
+"platforms.linux-arm64" = { checksum = "sha256:6369242c584065f195fb20cb36fbd7cb63ae690605bbe89868a7596b596c2c23", url = "https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/sharkdp/bat/releases/assets/323548153"}
 "platforms.linux-arm64-musl" = { checksum = "sha256:6369242c584065f195fb20cb36fbd7cb63ae690605bbe89868a7596b596c2c23", url = "https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/sharkdp/bat/releases/assets/323548153"}
 "platforms.linux-x64" = { checksum = "sha256:726f04c8f576a7fd18b7634f1bbf2f915c43494c1c0f013baa3287edb0d5a2a3", url = "https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-x86_64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/sharkdp/bat/releases/assets/323549181"}
 "platforms.linux-x64-musl" = { checksum = "sha256:0dcd8ac79732c0d5b136f11f4ee00e581440e16a44eab5b3105b611bbf2cf191", url = "https://github.com/sharkdp/bat/releases/download/v0.26.1/bat-v0.26.1-x86_64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/sharkdp/bat/releases/assets/323549429"}
@@ -264,7 +264,7 @@ backend = "github:sharkdp/bat"
 [[tools."github:sharkdp/fd"]]
 version = "10.4.2"
 backend = "github:sharkdp/fd"
-"platforms.linux-arm64" = { checksum = "sha256:6c51f7c5446b3338b1e401ff15dc194c590bb2fa64fd43ff3278300f073adec5", url = "https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-aarch64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/370663239"}
+"platforms.linux-arm64" = { checksum = "sha256:f32d3657473fba74e2600babc8db0b93420d51169223b7e8143b2ed55d8fd9e8", url = "https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/370662859"}
 "platforms.linux-arm64-musl" = { checksum = "sha256:f32d3657473fba74e2600babc8db0b93420d51169223b7e8143b2ed55d8fd9e8", url = "https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-aarch64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/370662859"}
 "platforms.linux-x64" = { checksum = "sha256:def59805cd14b5651b68990855f426ad087f3b96881296d963910431ba3143c8", url = "https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-gnu.tar.gz", url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/370662118"}
 "platforms.linux-x64-musl" = { checksum = "sha256:e3257d48e29a6be965187dbd24ce9af564e0fe67b3e73c9bdcd180f4ec11bdde", url = "https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-musl.tar.gz", url_api = "https://api.github.com/repos/sharkdp/fd/releases/assets/370662855"}
