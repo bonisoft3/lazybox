@@ -59,6 +59,8 @@ RUN rm -rf /lazybox/libexec/mise /build $HOME/.local/share/mise $HOME/.cache $HO
 FROM ${BASE_IMG} AS lazybox
 COPY --from=lazybox-builder /lazybox /lazybox
 ENV PATH=$PATH:/lazybox/bin
+ONBUILD ARG LAZYBOX_TOOLS=""
+ONBUILD RUN [ -z "$LAZYBOX_TOOLS" ] || for t in $LAZYBOX_TOOLS; do "$t" --help >/dev/null 2>&1 || true; done
 
 FROM lazybox AS nubox
 WORKDIR /root

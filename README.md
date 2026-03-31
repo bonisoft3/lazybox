@@ -48,7 +48,7 @@ COPY --from=bonisoft3/lazybox /lazybox /usr/local
 RUN jq --version  # fetched and cached in this layer
 ```
 
-Includes bundled static curl and CA certificates, so tools bootstrap even on images without curl.
+Add extra tooling to an existing base image for ad-hoc debugging and inspection. Includes bundled static curl and CA certificates, so tools bootstrap even on images without curl.
 
 ### Stubs-only overlay (~350 KB)
 
@@ -57,7 +57,7 @@ FROM alpine/curl
 COPY --from=bonisoft3/lazybox /lazybox/bin /usr/local/bin
 ```
 
-When the host already provides SSL-enabled curl, copy just the stubs for a minimal overlay.
+Keep the image minimal when the host already provides SSL-enabled curl. Only the stubs are copied — tools download on first use.
 
 ### Devcontainer
 
@@ -81,6 +81,8 @@ COPY --from=bonisoft3/lazybox /lazybox /usr/local
 RUN jq --version
 ```
 
+Busybox on steroids. The stubs need a shell to bootstrap, so start with busybox to provide `/bin/sh`, then layer lazybox on top.
+
 ### Pinned base with system packages
 
 ```dockerfile
@@ -89,7 +91,16 @@ COPY --from=bonisoft3/lazybox /lazybox /usr/local
 RUN zypper install -y git-core
 ```
 
-Leap provides stable, versioned repositories — packages aren't garbage-collected like in rolling distros. Pin with a multiplatform sha256 for full reproducibility. Use zypper for dependencies not available in mise, and lazybox for everything else.
+Good for stable builder images. Leap provides versioned repositories — packages aren't garbage-collected like in rolling distros. Pin with a multiplatform sha256 for full reproducibility. Use zypper for dependencies not available in mise, and lazybox for everything else.
+
+### Pre-caching tools
+
+```dockerfile
+FROM bonisoft3/lazybox
+ARG LAZYBOX_TOOLS="jq rg fd bat"
+```
+
+The lazybox image includes an `ONBUILD` trigger — set the `LAZYBOX_TOOLS` arg to pre-cache specific tools during build. Each tool's `--help` is invoked automatically, triggering its stub and caching the binary in the image layer. For ad-hoc caching without the arg, just `RUN jq --help` directly.
 
 ### Run standalone
 
@@ -97,7 +108,11 @@ Leap provides stable, versioned repositories — packages aren't garbage-collect
 docker run --rm bonisoft3/lazybox rg --version
 ```
 
+Useful for trying out the tools without installing anything locally.
+
 ### Extract to a local directory
+
+For when you want to test tools locally on your machine without Docker.
 
 ```bash
 docker create --name lb bonisoft3/lazybox
