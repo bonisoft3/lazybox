@@ -388,6 +388,18 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
                 $content = ($content + $"url = \"($platform_data.url)\"\n")
             }
 
+            # url_api: the GitHub releases API asset URL (e.g.
+            # api.github.com/repos/<owner>/<repo>/releases/assets/<id>).
+            # Without it, mise's `github:` backend hits the GitHub
+            # releases-list API to find the asset for the pinned
+            # version — which 403s under anonymous rate limit during
+            # parallel docker builds. Pre-resolved url_api lets mise
+            # download the asset directly. The lockfile already has
+            # this data; we just have to forward it through.
+            if ($platform_data | get url_api? | is-not-empty) {
+                $content = ($content + $"url_api = \"($platform_data.url_api)\"\n")
+            }
+
             if ($platform_data | get checksum? | is-not-empty) {
                 $content = ($content + $"checksum = \"($platform_data.checksum)\"\n")
             }

@@ -237,7 +237,10 @@ def test_stub_generation_core [stubs_dir: string] {
         "bat": "aqua:sharkdp/bat@0.25.0"
     }
 
-    # Test parsing lockfile for stub data
+    # Test parsing lockfile for stub data. linux-amd64 carries
+    # url_api too (the GitHub releases asset API URL) — pre-resolved
+    # in the lockfile so the emitter must forward it; without it,
+    # mise hits the rate-limited /releases endpoint at install time.
     let tools_data = [
         {
             name: "yq",
@@ -247,6 +250,7 @@ def test_stub_generation_core [stubs_dir: string] {
             platforms: {
                 "linux-amd64": {
                     url: "https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_linux_amd64.tar.gz",
+                    url_api: "https://api.github.com/repos/mikefarah/yq/releases/assets/9999999",
                     checksum: "sha256:e4c2570249e3993e33ffa44e592b5eee8545bd807bfbeb596c2986d86cb6c85c",
                     size: 4087934
                 },
@@ -273,6 +277,14 @@ def test_stub_generation_core [stubs_dir: string] {
     }
 
     if not ($toml_content | str contains "platforms.linux-amd64") {
+        return false
+    }
+
+    # Regression guard: the linux-amd64 entry above carries url_api,
+    # so the rendered stub must too. Without this assertion the
+    # emitter could silently stop forwarding url_api and mise would
+    # fall back to GitHub API resolution at install time.
+    if not ($toml_content | str contains "url_api = \"https://api.github.com/repos/mikefarah/yq/releases/assets/9999999\"") {
         return false
     }
 
@@ -312,6 +324,13 @@ def build_test_toml_content [tool: record, is_musl_variant: bool] {
 
             if ($platform_data | get url? | is-not-empty) {
                 $content = ($content + $"url = \"($platform_data.url)\"\n")
+            }
+
+            # Mirrors the production emitter — url_api forwards the
+            # GitHub asset API URL so mise's `github:` backend doesn't
+            # need to call the rate-limited releases-list endpoint.
+            if ($platform_data | get url_api? | is-not-empty) {
+                $content = ($content + $"url_api = \"($platform_data.url_api)\"\n")
             }
 
             if ($platform_data | get checksum? | is-not-empty) {
