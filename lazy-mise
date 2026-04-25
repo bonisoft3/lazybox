@@ -46,12 +46,32 @@ if [ "$(uname -s)" = "Linux" ] && [ ! -f /etc/alpine-release ]; then
     fi
 fi
 
-# Disable attestation checks to avoid GitHub API rate limiting
+# Disable attestation checks to avoid GitHub API rate limiting.
+# Both global AND backend-scoped flags are needed: the backend-scoped
+# settings (MISE_AQUA__*, MISE_GITHUB__*) DON'T override the globals,
+# so without MISE_GITHUB_ATTESTATIONS / MISE_SLSA mise still calls the
+# unauthenticated GitHub releases API and 403s on the rate limit
+# (especially under parallel builds where many processes query at once).
+export MISE_GITHUB_ATTESTATIONS=false
+export MISE_SLSA=false
+export MISE_COSIGN=false
+export MISE_MINISIGN=false
 export MISE_AQUA__GITHUB_ATTESTATIONS=false
 export MISE_AQUA__COSIGN=false
 export MISE_AQUA__SLSA=false
 export MISE_AQUA__MINISIGN=false
 export MISE_GITHUB__GITHUB_ATTESTATIONS=false
 export MISE_GITHUB__SLSA=false
+
+# Trust the lazybox bin/ dir so any `mise install` (or other top-level
+# mise invocation) treats the stubs there as authoritative — no
+# version-list resolution against the GitHub API. Append to whatever
+# the caller already set so we don't clobber a project's own paths.
+LAZYBOX_BIN="$PREFIX/bin"
+if [ -n "${MISE_TRUSTED_CONFIG_PATHS:-}" ]; then
+    export MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:${LAZYBOX_BIN}"
+else
+    export MISE_TRUSTED_CONFIG_PATHS="${LAZYBOX_BIN}"
+fi
 
 exec "$MISE_BIN" "$@"
