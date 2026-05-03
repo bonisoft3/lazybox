@@ -39,6 +39,7 @@ github.slsa = false
 "github:lvillis/tcping-rs" = "1.2.24"
 "github:chmln/sd" = "v1.1.0"
 "github:FiloSottile/age" = "v1.3.1"
+"github:watchexec/watchexec" = "2.5.1"
 
 # http: backend — URL templates work for macOS/Linux; Windows overrides below.
 [tools."http:docker-cli"]
