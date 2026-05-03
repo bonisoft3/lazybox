@@ -169,49 +169,43 @@ export def get_aqua_platform_preference [tool_name: string, platform: string] {
 }
 
 
-# Get Alpine-specific platform preference
-export def get_alpine_platform_preference [tool_data: record] {
+# Generate Alpine variant of platform data.
+#
+# On Alpine, mise reports its platform as plain `linux-arm64` / `linux-x64`
+# (no `-musl` suffix), so `mise tool-stub` matches `[platforms.linux-arm64]`
+# and ignores the more specific `[platforms.linux-arm64-musl]`. To make
+# `.musl.toml` unambiguously musl-flavored, override the canonical
+# `linux-{arm64,x64}` URLs with their musl counterparts:
+#   - if upstream ships an arm64-musl asset → linux-arm64 = linux-arm64-musl
+#   - else if upstream ships an x64-musl asset → linux-arm64 = linux-x64-musl
+#     (Alpine arm64 falls back to x64-musl via qemu)
+#   - if upstream ships an x64-musl asset → linux-x64 = linux-x64-musl
+#
+# "Has musl asset" is detected by `musl` appearing in the lockfile URL —
+# mise lock encodes the asset filename, which contains `musl` for real
+# musl variants. When upstream only has gnu (e.g., hyperfine arm64),
+# `mise lock` fills the `-musl` slot with the gnu URL as a fallback,
+# which we treat as "no real musl variant" so the x64 fallback wins.
+export def generate_alpine_platform_data [tool_data: record] {
     let platforms = ($tool_data | get platforms? | default {})
 
-    # Check if we have musl variants available
-    let linux_amd64_data = ($platforms | get linux-amd64? | default {})
-    let linux_arm64_data = ($platforms | get linux-arm64? | default {})
-    let linux_amd64_url = ($linux_amd64_data | get url? | default "")
-    let linux_arm64_url = ($linux_arm64_data | get url? | default "")
+    let arm64_musl = ($platforms | get linux-arm64-musl? | default {})
+    let x64_musl   = ($platforms | get linux-x64-musl?   | default {})
 
-    let has_musl_amd64 = ($linux_amd64_url | str contains "musl")
-    let has_musl_arm64 = ($linux_arm64_url | str contains "musl")
-    let has_gnu_arm64 = ($linux_arm64_url | str contains "gnu")
+    let arm64_musl_is_real = ($arm64_musl | get url? | default "" | str contains "musl")
+    let x64_musl_is_real   = ($x64_musl   | get url? | default "" | str contains "musl")
 
-    # Alpine ARM64 fallback logic: if there's musl x86_64 but no musl arm64 (only gnu arm64),
-    # prefer x86_64 musl for Alpine compatibility
-    if $has_musl_amd64 and (not $has_musl_arm64) and $has_gnu_arm64 {
-        {
-            prefer_platform: "linux-amd64",
-            reason: "Alpine ARM64 fallback: using x86_64 musl instead of arm64 gnu"
-        }
-    } else {
-        {
-            prefer_platform: "",
-            reason: "No Alpine-specific preference needed"
-        }
+    mut alpine_platforms = $platforms
+
+    if $arm64_musl_is_real {
+        $alpine_platforms = ($alpine_platforms | upsert linux-arm64 $arm64_musl)
+    } else if $x64_musl_is_real {
+        $alpine_platforms = ($alpine_platforms | upsert linux-arm64 $x64_musl)
     }
-}
 
-# Generate Alpine variant of platform data
-export def generate_alpine_platform_data [tool_data: record] {
-    let alpine_pref = (get_alpine_platform_preference $tool_data)
-
-    if ($alpine_pref.prefer_platform | is-not-empty) {
-        let platforms = ($tool_data | get platforms? | default {})
-        let preferred_platform_data = ($platforms | get $alpine_pref.prefer_platform | default {})
-
-        # Replace ARM64 data with AMD64 musl data for Alpine
-        mut alpine_platforms = $platforms
-        $alpine_platforms = ($alpine_platforms | upsert linux-arm64 $preferred_platform_data)
-
-        $tool_data | upsert platforms $alpine_platforms
-    } else {
-        $tool_data
+    if $x64_musl_is_real {
+        $alpine_platforms = ($alpine_platforms | upsert linux-x64 $x64_musl)
     }
+
+    $tool_data | upsert platforms $alpine_platforms
 }
