@@ -26,7 +26,7 @@ RUN mv /tmp/ca-certificates.crt /lazybox/share/ca-certificates/
 
 # === Build: mise install + nu stub generation + assembly ===
 FROM bbcurl AS lazybox-builder
-ENV MISE_VERSION=2026.3.17
+ENV MISE_VERSION=2026.5.2
 # lazy-mise resolves static-curl relative to its own prefix ($PREFIX/libexec/static-curl);
 # bbcurl placed it at /lazybox/libexec, so symlink it into the build prefix too.
 RUN ln -s /lazybox/libexec/static-curl /build/libexec/static-curl
