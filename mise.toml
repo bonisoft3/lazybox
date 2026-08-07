@@ -13,8 +13,8 @@ github.github_attestations = false
 github.slsa = false
 
 [tools]
-"github:docker/buildx" = "0.32.1"
-"github:docker/compose" = "5.1.1"
+"github:docker/buildx" = "0.36.1"
+"github:docker/compose" = "5.4.0"
 "github:nushell/nushell" = "0.110.0"
 "github:cue-lang/cue" = "0.16.0"
 "github:go-task/task" = "v3.49.1"
@@ -43,7 +43,7 @@ github.slsa = false
 
 # http: backend — URL templates work for macOS/Linux; Windows overrides below.
 [tools."http:docker-cli"]
-version = "29.3.0"
+version = "29.7.2"
 url = 'https://download.docker.com/{{ os(macos="mac") }}/static/stable/{{ arch(x64="x86_64", arm64="aarch64") }}/docker-{{ version }}.tgz'
 strip_components = 1
 bin = "docker"
