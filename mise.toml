@@ -14,7 +14,7 @@ github.slsa = false
 
 [tools]
 "github:docker/buildx" = "0.36.1"
-"github:docker/compose" = "5.4.0"
+"github:docker/compose" = "2.40.3"
 "github:nushell/nushell" = "0.110.0"
 "github:cue-lang/cue" = "0.16.0"
 "github:go-task/task" = "v3.49.1"

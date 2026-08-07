@@ -1,22 +1,22 @@
 # Auto-generated stub for ($binary_info.clean_name)
 
-version = "5.4.0"
+version = "2.40.3"
 bin = "docker-cli-plugin-docker-compose"
 
 # Platform configurations
 [platforms.darwin-arm64]
-url = "https://github.com/docker/compose/releases/download/v5.4.0/docker-compose-darwin-aarch64"
-checksum = "sha256:bc3d1fd4c01e3af9b481fc5ea153ea7c006c77eb39be78e9af3e2e8ebecc0d61"
+url = "https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-darwin-aarch64"
+checksum = "sha256:8cd7eb5f95bacb536cc407111662e2c205d67d9abfea5dcb8400be8418db60d1"
 
 [platforms.linux-amd64]
-url = "https://github.com/docker/compose/releases/download/v5.4.0/docker-compose-linux-x86_64"
-checksum = "sha256:837fd1d35bf6a494f41b5b5988269a7be79de337cf1a1a6ff0e45ab51bb4e9be"
+url = "https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-x86_64"
+checksum = "sha256:dba9d98e1ba5bfe11d88c99b9bd32fc4a0624a30fafe68eea34d61a3e42fd372"
 
 [platforms.linux-arm64]
-url = "https://github.com/docker/compose/releases/download/v5.4.0/docker-compose-linux-aarch64"
-checksum = "sha256:fc5d1371f1ec7987e703da94ede49af3fbfb240b83f22991a98511de7bc4b93b"
+url = "https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-aarch64"
+checksum = "sha256:d26373b19e89160546d15407516cc59f453030d9bc5b43ba7faf16f7b4980137"
 
 [platforms.macos-arm64]
-url = "https://github.com/docker/compose/releases/download/v5.4.0/docker-compose-darwin-aarch64"
-checksum = "sha256:bc3d1fd4c01e3af9b481fc5ea153ea7c006c77eb39be78e9af3e2e8ebecc0d61"
+url = "https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-darwin-aarch64"
+checksum = "sha256:8cd7eb5f95bacb536cc407111662e2c205d67d9abfea5dcb8400be8418db60d1"
 
