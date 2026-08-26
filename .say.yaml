@@ -8,4 +8,6 @@ say:
   test:
     do: "nu mise-lazybox.test.nu"
   release:
-    do: "docker build --target lazybox -t bonisoft3/lazybox . && docker build --target nubox -t bonisoft3/lazybox:nubox ."
+    do: >-
+      [[target tag]; [lazybox bonisoft3/lazybox] [nubox bonisoft3/lazybox:nubox]]
+      | each { |r| ^docker build --target $r.target -t $r.tag . }
