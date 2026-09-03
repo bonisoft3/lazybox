@@ -1046,15 +1046,19 @@ version = "29.7.2"
 backend = "http:docker-cli"
 
 [tools."http:docker-cli"."platforms.linux-arm64"]
+checksum = "blake3:566fb46bc1035deb5d1bef9529a45fa1fb0c4a3e3ad62c3c40a1479fbd4743c6"
 url = "https://download.docker.com/linux/static/stable/aarch64/docker-29.7.2.tgz"
 
 [tools."http:docker-cli"."platforms.linux-arm64-musl"]
+checksum = "blake3:566fb46bc1035deb5d1bef9529a45fa1fb0c4a3e3ad62c3c40a1479fbd4743c6"
 url = "https://download.docker.com/linux/static/stable/aarch64/docker-29.7.2.tgz"
 
 [tools."http:docker-cli"."platforms.linux-x64"]
+checksum = "blake3:89d808dcd84f4fa20664091dfd1eec4e1aab00d32ec84fec8286f2030712ce6a"
 url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.7.2.tgz"
 
 [tools."http:docker-cli"."platforms.linux-x64-musl"]
+checksum = "blake3:89d808dcd84f4fa20664091dfd1eec4e1aab00d32ec84fec8286f2030712ce6a"
 url = "https://download.docker.com/linux/static/stable/x86_64/docker-29.7.2.tgz"
 
 [tools."http:docker-cli"."platforms.macos-arm64"]
@@ -1062,9 +1066,11 @@ checksum = "blake3:c8ca1f8853af6be97265b4a9ea68a3edc34cf844d4a7485a9420fd574ad34
 url = "https://download.docker.com/mac/static/stable/aarch64/docker-29.7.2.tgz"
 
 [tools."http:docker-cli"."platforms.macos-x64"]
+checksum = "blake3:bf0cb51dedcd728a45b9802e7c72ec080bc08ae41bd744adf9a16803fe691d58"
 url = "https://download.docker.com/mac/static/stable/x86_64/docker-29.7.2.tgz"
 
 [tools."http:docker-cli"."platforms.windows-x64"]
+checksum = "blake3:fd6503f2755a0cb6f3723aeedd94b3bb674fe524f238014bfc4ccc4bad0a9556"
 url = "https://download.docker.com/win/static/stable/x86_64/docker-29.7.2.zip"
 
 [[tools."http:helm"]]
@@ -1072,24 +1078,31 @@ version = "4.1.3"
 backend = "http:helm"
 
 [tools."http:helm"."platforms.linux-arm64"]
+checksum = "blake3:47cd8560e66a6895f07f8e18e79a5ccaa86254ee7f648a4bbdda165ddedf4ebb"
 url = "https://get.helm.sh/helm-v4.1.3-linux-arm64.tar.gz"
 
 [tools."http:helm"."platforms.linux-arm64-musl"]
+checksum = "blake3:47cd8560e66a6895f07f8e18e79a5ccaa86254ee7f648a4bbdda165ddedf4ebb"
 url = "https://get.helm.sh/helm-v4.1.3-linux-arm64.tar.gz"
 
 [tools."http:helm"."platforms.linux-x64"]
+checksum = "blake3:5f8a0f31d32b1e63e3fcbcaad21e80484bfdc9c4d417ff73ec95107d5475f5c4"
 url = "https://get.helm.sh/helm-v4.1.3-linux-amd64.tar.gz"
 
 [tools."http:helm"."platforms.linux-x64-musl"]
+checksum = "blake3:5f8a0f31d32b1e63e3fcbcaad21e80484bfdc9c4d417ff73ec95107d5475f5c4"
 url = "https://get.helm.sh/helm-v4.1.3-linux-amd64.tar.gz"
 
 [tools."http:helm"."platforms.macos-arm64"]
+checksum = "blake3:3cb721d117827e2e3a47615812be00cdda05ae6490a9a61250b269ed2420dd4f"
 url = "https://get.helm.sh/helm-v4.1.3-darwin-arm64.tar.gz"
 
 [tools."http:helm"."platforms.macos-x64"]
+checksum = "blake3:e81ebf250045541985f4028a7f86c2d94504395af35c8d35025d4d2ba5b81aac"
 url = "https://get.helm.sh/helm-v4.1.3-darwin-amd64.tar.gz"
 
 [tools."http:helm"."platforms.windows-x64"]
+checksum = "blake3:4a141c7bfd34d074325ace9b4b615793a43ff2416e86de973c32c401fea6f1b9"
 url = "https://get.helm.sh/helm-v4.1.3-windows-amd64.zip"
 
 [[tools."http:kubectl"]]
@@ -1097,24 +1110,31 @@ version = "1.35.2"
 backend = "http:kubectl"
 
 [tools."http:kubectl"."platforms.linux-arm64"]
+checksum = "blake3:4d33c5a153851284f9d12723c3a9dcaf72711a8fa17e6c4cd6bdc29acc21cb09"
 url = "https://dl.k8s.io/v1.35.2/bin/linux/arm64/kubectl"
 
 [tools."http:kubectl"."platforms.linux-arm64-musl"]
+checksum = "blake3:4d33c5a153851284f9d12723c3a9dcaf72711a8fa17e6c4cd6bdc29acc21cb09"
 url = "https://dl.k8s.io/v1.35.2/bin/linux/arm64/kubectl"
 
 [tools."http:kubectl"."platforms.linux-x64"]
+checksum = "blake3:213974f18bcb15e5f695bd90917b29b39751f51f0d80dd181cb83403fc7a5d8a"
 url = "https://dl.k8s.io/v1.35.2/bin/linux/amd64/kubectl"
 
 [tools."http:kubectl"."platforms.linux-x64-musl"]
+checksum = "blake3:213974f18bcb15e5f695bd90917b29b39751f51f0d80dd181cb83403fc7a5d8a"
 url = "https://dl.k8s.io/v1.35.2/bin/linux/amd64/kubectl"
 
 [tools."http:kubectl"."platforms.macos-arm64"]
+checksum = "blake3:72eec32a8dd7c686265f20c3b4fd8bfea11642ca76df7dd649b936c3be3affc6"
 url = "https://dl.k8s.io/v1.35.2/bin/darwin/arm64/kubectl"
 
 [tools."http:kubectl"."platforms.macos-x64"]
+checksum = "blake3:1120b9a2052ac1ec1398de69cd04c921dd053853fa1eae8b077fc9e12ccd2591"
 url = "https://dl.k8s.io/v1.35.2/bin/darwin/amd64/kubectl"
 
 [tools."http:kubectl"."platforms.windows-x64"]
+checksum = "blake3:e63e447232493f663f843ed7d8971eaf36900466761fbd042d5871ff6527cdd1"
 url = "https://dl.k8s.io/v1.35.2/bin/windows/amd64/kubectl.exe"
 
 [[tools."http:skaffold"]]
@@ -1122,22 +1142,29 @@ version = "2.18.1"
 backend = "http:skaffold"
 
 [tools."http:skaffold"."platforms.linux-arm64"]
+checksum = "blake3:562329b7d85a0b908ea038f2ebe04cdbbe2a5495316bd928f6d3ec495b4c7e06"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-linux-arm64"
 
 [tools."http:skaffold"."platforms.linux-arm64-musl"]
+checksum = "blake3:562329b7d85a0b908ea038f2ebe04cdbbe2a5495316bd928f6d3ec495b4c7e06"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-linux-arm64"
 
 [tools."http:skaffold"."platforms.linux-x64"]
+checksum = "blake3:76ce50a4ed44e7e0bb187d77b3220136244bec950ab98f051d293f47dce4799a"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-linux-amd64"
 
 [tools."http:skaffold"."platforms.linux-x64-musl"]
+checksum = "blake3:76ce50a4ed44e7e0bb187d77b3220136244bec950ab98f051d293f47dce4799a"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-linux-amd64"
 
 [tools."http:skaffold"."platforms.macos-arm64"]
+checksum = "blake3:a37ad31bf1045c53fbbf2c074eb965824baaba8f5a30d2e15626f46446773abc"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-darwin-arm64"
 
 [tools."http:skaffold"."platforms.macos-x64"]
+checksum = "blake3:ca957ce86f47a360bd778f66289beedccacd8fdb4e9df69e380db2181d09bab7"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-darwin-amd64"
 
 [tools."http:skaffold"."platforms.windows-x64"]
+checksum = "blake3:d599c31330144f11c3c0c5e56991402ab1e9a6b148d5ddecd1e46a35d4333c23"
 url = "https://storage.googleapis.com/skaffold/releases/v2.18.1/skaffold-windows-amd64.exe"
