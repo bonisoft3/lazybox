@@ -364,9 +364,18 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
         "# Auto-generated stub for ($binary_info.clean_name)\n\n"
     }
 
-    $content = ($content + $"tool = \"($tool_data.tool_spec)\"\n")
+    # With every platform's url and checksum and a named bin the stub is
+    # fetched as plain HTTP: a `tool` line routes it through its backend, and
+    # `github:` asks the releases API for the tag first, 403ing under the
+    # anonymous limit. A stub without a bin line needs the backend to find it.
+    let platforms = ($tool_data | get platforms? | default {})
+    let named = (should_include_bin_line $tool_data.tool_spec $binary_info.original_name)
+    let pinned = $named and ($platforms | is-not-empty) and ($platforms | values | all {|p| ($p | get url? | is-not-empty) and ($p | get checksum? | is-not-empty) })
+    if not $pinned {
+        $content = ($content + $"tool = \"($tool_data.tool_spec)\"\n")
+    }
     $content = ($content + $"version = \"($tool_data.version)\"\n")
-    if (should_include_bin_line $tool_data.tool_spec $binary_info.original_name) {
+    if $named {
         $content = ($content + $"bin = \"($binary_info.original_name)\"\n")
     }
     let strip = ($tool_data | get strip_components? | default null)
@@ -374,7 +383,6 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
         $content = ($content + $"strip_components = ($strip)\n")
     }
 
-    let platforms = ($tool_data | get platforms? | default {})
     if ($platforms | items {|k, v| {key: $k, value: $v}} | length) > 0 {
         $content = ($content + "\n# Platform configurations\n")
 
