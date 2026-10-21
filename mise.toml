@@ -13,14 +13,14 @@ github.github_attestations = false
 github.slsa = false
 
 [tools]
-"github:docker/buildx" = "0.36.1"
-"github:docker/compose" = "2.40.3"
-"github:nushell/nushell" = "0.115.1"
-"github:cue-lang/cue" = "0.16.0"
-"github:go-task/task" = "v3.49.1"
-"github:casey/just" = "1.48.1"
+"github:docker/buildx" = "0.38.1"
+"github:docker/compose" = "5.6.1"
+"github:nushell/nushell" = "0.116.1"
+"github:cue-lang/cue" = "0.16.1"
+"github:go-task/task" = "v3.54.0"
+"github:casey/just" = "1.59.0"
 "github:getsops/sops" = "3.12.2"
-"github:bufbuild/buf" = "1.66.1"
+"github:bufbuild/buf" = "1.74.0"
 "github:kubernetes-sigs/kind" = "0.31.0"
 "github:micro-editor/micro" = "2.0.15"
 "github:sharkdp/bat" = "0.26.1"
@@ -33,7 +33,7 @@ github.slsa = false
 "aqua:Byron/dua-cli" = "2.34.0"
 "github:sharkdp/hyperfine" = "1.20.0"
 "github:lsd-rs/lsd" = "1.2.0"
-"github:astral-sh/uv" = "0.11.2"
+"github:astral-sh/uv" = "0.13.4"
 "github:mikefarah/yq" = "4.52.5"
 "github:dbohdan/recur" = "3.2.0"
 "github:lvillis/tcping-rs" = "1.2.24"
@@ -43,7 +43,7 @@ github.slsa = false
 
 # http: backend — URL templates work for macOS/Linux; Windows overrides below.
 [tools."http:docker-cli"]
-version = "29.7.2"
+version = "29.9.2"
 url = 'https://download.docker.com/{{ os(macos="mac") }}/static/stable/{{ arch(x64="x86_64", arm64="aarch64") }}/docker-{{ version }}.tgz'
 strip_components = 1
 bin = "docker"
