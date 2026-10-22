@@ -76,8 +76,8 @@ jobs:
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta-lazybox.outputs.tags }}
           labels: ${{ steps.meta-lazybox.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,version=2
+          cache-to: type=gha,version=2,mode=max
 
       - name: Build and push nubox
         uses: docker/build-push-action@v6
@@ -90,8 +90,8 @@ jobs:
           push: ${{ startsWith(github.ref, 'refs/tags/') }}
           tags: ${{ steps.meta-nubox.outputs.tags }}
           labels: ${{ steps.meta-nubox.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,version=2
+          cache-to: type=gha,version=2,mode=max
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
