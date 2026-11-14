@@ -6,4 +6,4 @@ bin=yq_$(uname -s | tr A-Z a-z)_$(uname -m | sed -e 's/x86_64/amd64/; s/aarch64/
 cp $DIR/yq.toml $DIR/$bin
 # Run mise tool-stub with trusted config
 "$DIR/../libexec/lazy-mise" trust -y -a -q .
-MISE_LOCKED=0 exec "$DIR/../libexec/lazy-mise" tool-stub "$DIR/$bin" "$@"
+exec "$DIR/../libexec/lazy-mise" tool-stub "$DIR/$bin" "$@"

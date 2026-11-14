@@ -26,7 +26,7 @@ RUN mv /tmp/ca-certificates.crt /lazybox/share/ca-certificates/
 
 # === Build: mise install + nu stub generation + assembly ===
 FROM bbcurl AS lazybox-builder
-ENV MISE_VERSION=2026.8.11
+ENV MISE_VERSION=2026.11.8
 # lazy-mise resolves static-curl relative to its own prefix ($PREFIX/libexec/static-curl);
 # bbcurl placed it at /lazybox/libexec, so symlink it into the build prefix too.
 RUN ln -s /lazybox/libexec/static-curl /build/libexec/static-curl
@@ -52,6 +52,14 @@ COPY --chmod=0755 kubectl /lazybox/bin/kubectl
 COPY kubectl.toml /lazybox/bin/
 COPY --chmod=0755 yq-stub.sh /lazybox/bin/yq
 COPY --chmod=0755 mise-stub.sh /lazybox/bin/mise
+# The stubs run in locked mode: mise reads a stub's versions, URLs and
+# checksums from the lock of the nearest config above it, so /lazybox carries
+# that config and a lock holding every stub (yq's per-platform copies too, as
+# its wrapper names the stub by platform). The wrappers trust /lazybox.
+RUN printf '[settings]\nlockfile = true\n' > /lazybox/mise.toml \
+ && for p in linux_amd64 linux_arm64 darwin_amd64 darwin_arm64; do cp /lazybox/bin/yq.toml /lazybox/bin/yq_$p; done \
+ && for s in /lazybox/bin/*.toml /lazybox/bin/yq_*; do MISE_TRUSTED_CONFIG_PATHS=/lazybox mise generate tool-stub --lock "$s"; done \
+ && rm -f /lazybox/bin/*.cmd
 # Clean up build artifacts not needed in the final image
 RUN rm -rf /lazybox/libexec/mise /build $HOME/.local/share/mise $HOME/.cache $HOME/.local/bin
 

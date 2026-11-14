@@ -306,15 +306,15 @@ def build_wrapper_content [tool_name: string, has_alpine_variant: bool] {
         $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
         $content = ($content + $"if [ -f /etc/alpine-release ] && [ -f \"\$DIR/($tool_name).musl.toml\" ]; then\n")
         $content = ($content + "    \"\$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
-        $content = ($content + $"    MISE_LOCKED=0 exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
+        $content = ($content + $"    exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).musl.toml\" \"\$@\"\n")
         $content = ($content + "else\n")
         $content = ($content + "    \"\$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
-        $content = ($content + $"    MISE_LOCKED=0 exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
+        $content = ($content + $"    exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
         $content = ($content + "fi\n")
     } else {
         $content = ($content + "# Run mise tool-stub with trusted config\n")
         $content = ($content + "\"\$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
-        $content = ($content + $"MISE_LOCKED=0 exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
+        $content = ($content + $"exec \"\$DIR/../libexec/lazy-mise\" tool-stub \"\$DIR/($tool_name).toml\" \"\$@\"\n")
     }
 
     $content
@@ -335,10 +335,10 @@ def build_docker_wrapper_content [] {
     $content = ($content + "# Check for Alpine and prefer musl variant if available\n")
     $content = ($content + "if [ -f /etc/alpine-release ] && [ -f \"$DIR/docker.musl.toml\" ]; then\n")
     $content = ($content + "    \"$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
-    $content = ($content + "    MISE_LOCKED=0 exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/docker.musl.toml\" \"$@\"\n")
+    $content = ($content + "    exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/docker.musl.toml\" \"$@\"\n")
     $content = ($content + "else\n")
     $content = ($content + "    \"$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
-    $content = ($content + "    MISE_LOCKED=0 exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/docker.toml\" \"$@\"\n")
+    $content = ($content + "    exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/docker.toml\" \"$@\"\n")
     $content = ($content + "fi\n")
     $content
 }
@@ -352,16 +352,16 @@ def build_yq_wrapper_content [] {
     $content = ($content + "cp $DIR/yq.toml $DIR/$bin\n")
     $content = ($content + "# Run mise tool-stub with trusted config\n")
     $content = ($content + "\"$DIR/../libexec/lazy-mise\" trust -y -a -q .\n")
-    $content = ($content + "MISE_LOCKED=0 exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/$bin\" \"$@\"\n")
+    $content = ($content + "exec \"$DIR/../libexec/lazy-mise\" tool-stub \"$DIR/$bin\" \"$@\"\n")
     $content
 }
 
 # Build TOML configuration content
-def build_toml_content [binary_info: record, tool_data: record, is_musl_variant: bool] {
+export def build_toml_content [binary_info: record, tool_data: record, is_musl_variant: bool] {
     mut content = if $is_musl_variant {
-        "# Auto-generated Alpine/musl stub for ($binary_info.clean_name)\n\n"
+        $"# Auto-generated Alpine/musl stub for ($binary_info.clean_name)\n\n"
     } else {
-        "# Auto-generated stub for ($binary_info.clean_name)\n\n"
+        $"# Auto-generated stub for ($binary_info.clean_name)\n\n"
     }
 
     # With every platform's url and checksum and a named bin the stub is
@@ -394,18 +394,6 @@ def build_toml_content [binary_info: record, tool_data: record, is_musl_variant:
 
             if ($platform_data | get url? | is-not-empty) {
                 $content = ($content + $"url = \"($platform_data.url)\"\n")
-            }
-
-            # url_api: the GitHub releases API asset URL (e.g.
-            # api.github.com/repos/<owner>/<repo>/releases/assets/<id>).
-            # Without it, mise's `github:` backend hits the GitHub
-            # releases-list API to find the asset for the pinned
-            # version — which 403s under anonymous rate limit during
-            # parallel docker builds. Pre-resolved url_api lets mise
-            # download the asset directly. The lockfile already has
-            # this data; we just have to forward it through.
-            if ($platform_data | get url_api? | is-not-empty) {
-                $content = ($content + $"url_api = \"($platform_data.url_api)\"\n")
             }
 
             if ($platform_data | get checksum? | is-not-empty) {

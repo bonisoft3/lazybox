@@ -21,7 +21,7 @@ Each tool is a tiny shell stub that bootstraps itself on first invocation:
 
 1. The **stub** (~10 lines of sh) calls `.lazybox` which delegates to `mise tool-stub <tool>.toml`
 2. If mise isn't installed yet, `.lazybox` fetches it using the bundled **static curl** and CA certificates
-3. **mise** reads the TOML manifest (version, platform URLs, checksums) and downloads the real binary
+3. **mise** reads the TOML manifest (version, platform URLs, checksums) and downloads the real binary; in locked mode it checks them against `/lazybox/mise.lock`, which lists every stub, so a consumer's `locked = true` holds for lazybox's tools too
 4. The binary is cached — subsequent calls run it directly
 
 All paths are resolved explicitly (no `PATH` lookups between components), so there are no shim loops regardless of what else is on your `PATH`.

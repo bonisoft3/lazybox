@@ -20,7 +20,7 @@ done
 
 if [ -z "$MISE_BIN" ]; then
     MISE_BIN="$PREFIX/libexec/mise"
-    MISE_VERSION=2026.8.11
+    MISE_VERSION=2026.11.8
     ARCH=$(uname -m | sed 's/x86_64/x64/; s/aarch64/arm64/')
     OS=$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/darwin/macos/')
     LIBC=; [ "$OS" = "linux" ] && LIBC="-musl"
@@ -63,15 +63,14 @@ export MISE_AQUA__MINISIGN=false
 export MISE_GITHUB__GITHUB_ATTESTATIONS=false
 export MISE_GITHUB__SLSA=false
 
-# Trust the lazybox bin/ dir so any `mise install` (or other top-level
-# mise invocation) treats the stubs there as authoritative — no
-# version-list resolution against the GitHub API. Append to whatever
-# the caller already set so we don't clobber a project's own paths.
-LAZYBOX_BIN="$PREFIX/bin"
+# Trust lazybox's own mise.toml, the config above the stubs whose lock holds
+# every one of them, and the stubs' dir; nothing else under the prefix.
+# Append to whatever the caller already set so we don't clobber a project's
+# own paths.
 if [ -n "${MISE_TRUSTED_CONFIG_PATHS:-}" ]; then
-    export MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:${LAZYBOX_BIN}"
+    export MISE_TRUSTED_CONFIG_PATHS="${MISE_TRUSTED_CONFIG_PATHS}:${PREFIX}/mise.toml:${PREFIX}/bin"
 else
-    export MISE_TRUSTED_CONFIG_PATHS="${LAZYBOX_BIN}"
+    export MISE_TRUSTED_CONFIG_PATHS="${PREFIX}/mise.toml:${PREFIX}/bin"
 fi
 
 exec "$MISE_BIN" "$@"

@@ -4,6 +4,7 @@
 # Creates a test mise.toml and verifies stub generation
 
 use std assert
+use mise-stub.nu [build_toml_content]
 
 def main [] {
     print "🧪 Running mise-lazybox.nu unit tests..."
@@ -237,10 +238,8 @@ def test_stub_generation_core [stubs_dir: string] {
         "bat": "aqua:sharkdp/bat@0.25.0"
     }
 
-    # Test parsing lockfile for stub data. linux-amd64 carries
-    # url_api too (the GitHub releases asset API URL) — pre-resolved
-    # in the lockfile so the emitter must forward it; without it,
-    # mise hits the rate-limited /releases endpoint at install time.
+    # Test parsing lockfile for stub data. linux-amd64 carries url_api, as
+    # locks do; a stub must not, the http backend rejects the option.
     let tools_data = [
         {
             name: "yq",
@@ -263,11 +262,15 @@ def test_stub_generation_core [stubs_dir: string] {
         }
     ]
 
-    # Test TOML content generation
+    # The stub the generator writes; yq keeps its `tool` line, the one binary
+    # the bin-line rule leaves to the backend.
     let tool_data = $tools_data.0
-    let toml_content = (build_test_toml_content $tool_data false)
+    let toml_content = (build_toml_content {clean_name: "yq", original_name: "yq"} $tool_data false)
 
-    # Verify TOML contains expected content
+    if not ($toml_content | str contains "# Auto-generated stub for yq") {
+        return false
+    }
+
     if not ($toml_content | str contains $"tool = \"($tool_data.tool_spec)\"") {
         return false
     }
@@ -280,11 +283,7 @@ def test_stub_generation_core [stubs_dir: string] {
         return false
     }
 
-    # Regression guard: the linux-amd64 entry above carries url_api,
-    # so the rendered stub must too. Without this assertion the
-    # emitter could silently stop forwarding url_api and mise would
-    # fall back to GitHub API resolution at install time.
-    if not ($toml_content | str contains "url_api = \"https://api.github.com/repos/mikefarah/yq/releases/assets/9999999\"") {
+    if ($toml_content | str contains "url_api") {
         return false
     }
 
@@ -300,52 +299,6 @@ def test_stub_generation_core [stubs_dir: string] {
     }
 
     true
-}
-
-def build_test_toml_content [tool: record, is_musl_variant: bool] {
-    mut content = if $is_musl_variant {
-        $"# Auto-generated Alpine/musl stub for ($tool.name)\n\n"
-    } else {
-        $"# Auto-generated stub for ($tool.name)\n\n"
-    }
-
-    $content = ($content + $"tool = \"($tool.tool_spec)\"\n")
-    $content = ($content + $"version = \"($tool.version)\"\n")
-    $content = ($content + $"bin = \"($tool.original_name)\"\n")
-
-    if ($tool.platforms | items {|k, v| {key: $k, value: $v}} | length) > 0 {
-        $content = ($content + "\n# Platform configurations\n")
-
-        for platform in ($tool.platforms | items {|k, v| {key: $k, value: $v}}) {
-            let platform_name = $platform.key
-            let platform_data = $platform.value
-
-            $content = ($content + $"[platforms.($platform_name)]\n")
-
-            if ($platform_data | get url? | is-not-empty) {
-                $content = ($content + $"url = \"($platform_data.url)\"\n")
-            }
-
-            # Mirrors the production emitter — url_api forwards the
-            # GitHub asset API URL so mise's `github:` backend doesn't
-            # need to call the rate-limited releases-list endpoint.
-            if ($platform_data | get url_api? | is-not-empty) {
-                $content = ($content + $"url_api = \"($platform_data.url_api)\"\n")
-            }
-
-            if ($platform_data | get checksum? | is-not-empty) {
-                $content = ($content + $"checksum = \"($platform_data.checksum)\"\n")
-            }
-
-            if ($platform_data | get size? | is-not-empty) {
-                $content = ($content + $"size = ($platform_data.size)\n")
-            }
-
-            $content = ($content + "\n")
-        }
-    }
-
-    $content
 }
 
 def build_test_wrapper_content [tool_name: string, has_alpine_variant: bool] {
